@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Suricat (Projet).iml" filepath="$PROJECT_DIR$/Suricat (Projet).iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/suricat.iml" filepath="$PROJECT_DIR$/.idea/modules/suricat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/suricat_main.iml" filepath="$PROJECT_DIR$/.idea/modules/suricat_main.iml" group="suricat" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/suricat_test.iml" filepath="$PROJECT_DIR$/.idea/modules/suricat_test.iml" group="suricat" />
     </modules>
   </component>
 </project>
