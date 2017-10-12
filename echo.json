@@ -1,0 +1,26 @@
+{
+  "model": {
+    "name": "R",
+    "attributes": [
+      "A",
+      "B",
+      "C"
+    ]
+  },
+  "transactions": [
+    {
+      "source": "t1",
+      "index": 1,
+      "lock": "xe",
+      "type": "find",
+      "target": "A"
+    },
+    {
+      "source": "t2",
+      "index": 2,
+      "lock": "se",
+      "type": "find",
+      "target": "B"
+    }
+  ]
+}
