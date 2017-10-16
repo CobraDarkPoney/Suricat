@@ -1,6 +1,7 @@
 package ladysnake;
 
-import ladysnake.helpers.*;
+import ladysnake.helpers.json.JsonReader;
+import ladysnake.helpers.json.JsonWriter;
 
 public class App {
     private static void out(String msg){  System.out.println(msg); }

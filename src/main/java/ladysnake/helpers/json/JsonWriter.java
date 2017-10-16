@@ -1,4 +1,4 @@
-package ladysnake.helpers;
+package ladysnake.helpers.json;
 
 import com.google.gson.*;
 
