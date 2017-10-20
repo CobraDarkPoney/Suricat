@@ -1,0 +1,46 @@
+<DBTransaction>
+	actions: 
+		<DBTransactionAction>
+			source: t1
+			index: 1
+			target:
+				<DBModel>
+					name: R
+					attributes: 
+						<DBAttribute>
+							name: A
+							database type: VARCHAR
+						</DBAttribute>
+
+						<DBAttribute>
+							name: B
+							database type: SMALLINT
+						</DBAttribute>
+				</DBModel>
+
+			lock: ExclusiveExtended
+			type: find
+		</DBTransactionAction>
+
+		<DBTransactionAction>
+			source: t2
+			index: 2
+			target:
+				<DBModel>
+					name: R
+					attributes: 
+						<DBAttribute>
+							name: A
+							database type: VARCHAR
+						</DBAttribute>
+
+						<DBAttribute>
+							name: B
+							database type: SMALLINT
+						</DBAttribute>
+				</DBModel>
+
+			lock: SharedExclusive
+			type: find
+		</DBTransactionAction>
+</DBTransaction>
