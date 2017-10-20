@@ -1,20 +1,22 @@
 package ladysnake.models;
 
+import com.google.gson.JsonObject;
+import ladysnake.helpers.utils.I_Stringify;
 import ladysnake.helpers.utils.Pair;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**A class used to describe a {@link DBModel}'s Attribute
  * @author Ludwig GUERIN
  */
-@SuppressWarnings("WeakerAccess")
-public class DBAttribute<T> {
-    /**The value of this {@link DBAttribute}*/
-    protected T value;
+@SuppressWarnings({"WeakerAccess", "unused"})
+public class DBAttribute implements I_Stringify{
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Properties
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
     /**The name of this {@link DBAttribute}*/
     protected String name;
@@ -22,33 +24,78 @@ public class DBAttribute<T> {
     /**The name of its type in the Database*/
     protected String dbtype;
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Constructors
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
     /**Default constructor
+     * @param name being the name of this {@link DBAttribute}
+     * @param dbtype being the database type of this {@link DBAttribute}
      */
-    public DBAttribute(T value){
-        this.value = value;
+    public DBAttribute(String name, String dbtype){
+        this.name = name;
+        this.dbtype = dbtype.toUpperCase();
     }
 
-    /**A getter for the value of this {@link DBAttribute}
-     * @return the value of this {@link DBAttribute}
-     */
-    public T getValue(){ return value; }
 
-    /**A setter for the value of this {@link DBAttribute}
-     * @param value being the new value for this {@link DBAttribute}
-     * @return a reference to the current {@link DBAttribute} (for chaining purposes)
-     */
-    public DBAttribute<T> setValue(T value){
-        this.value = value;
-        return this;
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Methods
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public String toString(){ return this.stringify(); }
+
+    @Override
+    public String stringify(String tabLevel) {
+        if(I_Stringify.isTab(tabLevel)){
+            String ret = "";
+
+            ret += tabLevel + "<DBAttribute>\n";
+            ret += tabLevel + "\t" + "name: " + this.name + "\n";
+            ret += tabLevel + "\t" + "database type: " + this.dbtype + "\n";
+            ret += tabLevel + "</DBAttribute>\n";
+
+            return ret;
+        }else
+            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
     }
 
-    public static <Type> Class<Type> getJavaTypeFromDBType(String dbtype){
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Class methods
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**Get the Java type associated to a Database type
+     * @param dbtype being a {@link String} that represents the Database type to convert from
+     * @return a {@link Class}
+     */
+    public static Class getJavaTypeFromDBType(String dbtype){
         return JdbcToJava.stream()
-                .filter(e -> e.equals(JDBCType.valueOf(dbtype)))
-                .findFirst()
-                .get()
-                .last();
+                    .filter(e -> e.first().equals(JDBCType.valueOf(dbtype.toUpperCase())))
+                    .findFirst()
+                    .map(Pair::last)
+                    .orElse(null);
     }
+
+    /**Create a {@link DBAttribute} from a {@link JsonObject}
+     * @param obj being the {@link JsonObject} to create the {@link DBAttribute} from
+     * @return a {@link DBAttribute}
+     */
+    public static DBAttribute fromJson(JsonObject obj){
+        String dbtype = obj.get(DBAttribute.DBTYPE).getAsString();
+        String name = obj.get(DBAttribute.NAME).getAsString();
+
+        return new DBAttribute(name, dbtype);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Class properties
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**The name of the property in the JSON file*/
+    public final static String NAME = "name";
+
+    /**The name of the property in the JSON file*/
+    public final static String DBTYPE = "dbtype";
 
     /**A List holding the mapping from JDBCType to a Java Class*/
     public final static List<Pair<JDBCType, Class>> JdbcToJava = new ArrayList<Pair<JDBCType, Class>>(){{

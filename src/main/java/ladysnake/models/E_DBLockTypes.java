@@ -11,16 +11,32 @@ public enum E_DBLockTypes {
     UE("UpdateExtended", 4),
     U("Update", 5);
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Properties
+    ////////////////////////////////////////////////////////////////////////////////////////////
     /**A short description of the lock
      */
     private final String lock;
     /**The index used as an ID for the lock
      */
     private final int index;
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Constructors
+    ////////////////////////////////////////////////////////////////////////////////////////////
     E_DBLockTypes(String type, int val){
         this.lock = type;
         this.index = val;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Methods
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    /**A handy method that retrieves the name of this {@link E_DBLockTypes}
+     * @return the name as a {@link String}
+     */
+    public String getName(){ return lock; }
 
     /**Determine whether this {@link E_DBLockTypes} is compatible with the given one or not
      * @param otherLock being the lock to check the compatibility with the current ont
@@ -30,6 +46,22 @@ public enum E_DBLockTypes {
         return  E_DBLockTypes.compatibility[this.index][otherLock.index];
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Class methods
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    /**A handy method that retrieves a {@link E_DBLockTypes} from its name (!= from the one given by getName)
+     * @param name
+     * @return
+     */
+    public static E_DBLockTypes get(String name){
+        return E_DBLockTypes.valueOf(name.toUpperCase());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Class properties
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    /**A compatibility matrix*/
     public static boolean[][] compatibility =  {
             //  y\x      XE    X       UE    U      SE    S
            /*XE*/    {false, false, false, false, false, false},

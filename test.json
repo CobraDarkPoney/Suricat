@@ -2,9 +2,14 @@
 	"model": {
 		"name": "R",
 		"attributes": [
-			"A",
-			"B",
-			"C"
+			{
+				"name": "A",
+				"dbtype": "VARCHAR"
+			},
+			{
+				"name": "B",
+				"dbtype": "SMALLINT"
+			}
 		]
 	},
 	
@@ -14,14 +19,14 @@
 			"index": 1,
 			"lock": "xe",
 			"type": "find",
-			"target": "A"
+			"target": "R"
 		},
 		{
 			"source": "t2",
 			"index": 2,
 			"lock": "se",
 			"type": "find",
-			"target": "B"
+			"target": "R"
 		}
 	]
 }
