@@ -1,0 +1,16 @@
+[
+  {
+    "source": "t1",
+    "index": 1,
+    "lock": "XE",
+    "type": "find",
+    "target": "R"
+  },
+  {
+    "source": "t2",
+    "index": 2,
+    "lock": "SE",
+    "type": "find",
+    "target": "R"
+  }
+]

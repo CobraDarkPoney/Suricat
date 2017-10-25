@@ -2,6 +2,7 @@ package ladysnake.models;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import ladysnake.helpers.json.I_JsonSerializable;
 import ladysnake.helpers.utils.I_Stringify;
 
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ import java.util.stream.StreamSupport;
 /**A class representing a Transaction occurring in a Database
  * @author Ludwig GUERIN
  */
-@SuppressWarnings({"WeakerAccess","unused", "returnValue"})
-public class DBTransaction implements I_Stringify{
+@SuppressWarnings({"WeakerAccess","unused"})
+public class DBTransaction implements I_Stringify, I_JsonSerializable{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,13 +109,33 @@ public class DBTransaction implements I_Stringify{
 
     @Override
     public String toString(){ return this.stringify(); }
-    /**
-     * Had to do this for some obscure reasons
-     * Was already like this in {@link I_Stringify}
-     * Like What The Heck Dood
-     */
 
+    @Override
+    public JsonElement toJson(){
+        List<JsonElement> actions = stream()
+        .map(DBTransactionAction::toJson)
+        .collect(Collectors.toList());
 
+        JsonArray arr = new JsonArray();
+        actions.forEach(arr::add);
+
+        return arr;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DBTransaction)) return false;
+
+        DBTransaction that = (DBTransaction) o;
+
+        return actions.equals(that.actions);
+    }
+
+    @Override
+    public int hashCode() {
+        return actions.hashCode();
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////

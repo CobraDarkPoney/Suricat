@@ -3,6 +3,7 @@ package ladysnake.models;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import ladysnake.helpers.json.I_JsonSerializable;
 import ladysnake.helpers.utils.I_Stringify;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.stream.StreamSupport;
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class DBModel implements I_Stringify{
+public class DBModel implements I_Stringify, I_JsonSerializable{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +103,39 @@ public class DBModel implements I_Stringify{
 
     @Override
     public String toString(){ return this.stringify(); }
+
+    @Override
+    public JsonElement toJson(){
+        List<JsonElement>attr = attrStream()
+                .map(DBAttribute::toJson)
+                .collect(Collectors.toList());
+
+        JsonArray attr_arr = new JsonArray();
+        attr.forEach(attr_arr::add);
+
+        JsonObject obj = new JsonObject();
+        obj.addProperty(NAME, this.name);
+        obj.add(ATTR_ARR, attr_arr);
+
+        return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DBModel)) return false;
+
+        DBModel dbModel = (DBModel) o;
+
+        return attributes.equals(dbModel.attributes) && getName().equals(dbModel.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = attributes.hashCode();
+        result = 31 * result + getName().hashCode();
+        return result;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class properties

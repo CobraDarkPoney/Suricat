@@ -3,6 +3,7 @@ package ladysnake.models;
 /**An Enum representing most Lock Types used in Databases
  * @author Ludwig GUERIN
  */
+@SuppressWarnings("unused")
 public enum E_DBLockTypes {
     XE("ExclusiveExtended", 0),
     X("Exclusive", 1),
@@ -30,6 +31,17 @@ public enum E_DBLockTypes {
         this.index = val;
     }
 
+    @Override
+    public String toString() {
+        String ret = "";
+        ret += "<E_DBLockTypes>\n";
+        ret += "lock: " + this.lock + "\n";
+        ret += "index: " + this.index + "\n";
+        ret += "</E_DBLockTypes>\n";
+
+        return ret;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,8 +63,8 @@ public enum E_DBLockTypes {
     ////Class methods
     ////////////////////////////////////////////////////////////////////////////////////////////
     /**A handy method that retrieves a {@link E_DBLockTypes} from its name (!= from the one given by getName)
-     * @param name
-     * @return
+     * @param name being the name of the Lock to get
+     * @return The created {@link E_DBLockTypes}
      */
     public static E_DBLockTypes get(String name){
         return E_DBLockTypes.valueOf(name.toUpperCase());

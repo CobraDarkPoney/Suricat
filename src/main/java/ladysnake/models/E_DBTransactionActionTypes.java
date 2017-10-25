@@ -29,6 +29,7 @@ public enum E_DBTransactionActionTypes {
     public String getName(){ return this.description; }
 
 
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class methods
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,5 +39,16 @@ public enum E_DBTransactionActionTypes {
      */
     public static E_DBTransactionActionTypes get(String name){
         return E_DBTransactionActionTypes.valueOf(name.toLowerCase());
+    }
+
+    @Override
+    public String toString() {
+        String ret = "";
+
+        ret += "<E_DBTransactionActionTypes>\n";
+        ret += "name: "+this.getName()+"\n";
+        ret += "</E_DBTransactionActionTypes>\n";
+
+        return ret;
     }
 }

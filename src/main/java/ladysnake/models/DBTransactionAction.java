@@ -1,13 +1,15 @@
 package ladysnake.models;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import ladysnake.helpers.json.I_JsonSerializable;
 import ladysnake.helpers.utils.I_Stringify;
 
 /** A class representing a {@link DBTransaction}'s Action
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class DBTransactionAction implements I_Stringify, Comparable<DBTransactionAction>{
+public class DBTransactionAction implements I_Stringify, I_JsonSerializable,Comparable<DBTransactionAction>{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +95,52 @@ public class DBTransactionAction implements I_Stringify, Comparable<DBTransactio
         return ret;
     }
 
+    @Override
+    public int compareTo(DBTransactionAction other) {
+        Integer t_i = this.index;
+        Integer t_o = other.index;
+
+        return t_i.compareTo(t_o);
+    }
+
+    @Override
+    public JsonElement toJson(){
+        JsonObject obj = new JsonObject();
+        obj.addProperty(SOURCE, this.source);
+        obj.addProperty(INDEX, this.index);
+        obj.addProperty(LOCK, this.lock.name());//As it's an enum value
+        obj.addProperty(TYPE,  this.type.name());//As it's an enum value
+        obj.addProperty(TARGET, this.target.getName());
+
+        return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DBTransactionAction)) return false;
+
+        DBTransactionAction that = (DBTransactionAction) o;
+
+        return index == that.index
+                && executed == that.executed
+                && source.equals(that.source)
+                && target.equals(that.target)
+                && lock == that.lock
+                && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = source.hashCode();
+        result = 31 * result + target.hashCode();
+        result = 31 * result + lock.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + index;
+        result = 31 * result + (executed ? 1 : 0);
+        return result;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,13 +175,5 @@ public class DBTransactionAction implements I_Stringify, Comparable<DBTransactio
         String type = obj.get(TYPE).getAsString();
 
         return new DBTransactionAction(source, index, target, lock, type);
-    }
-
-    @Override
-    public int compareTo(DBTransactionAction other) {
-        Integer t_i = this.index;
-        Integer t_o = other.index;
-
-        return t_i.compareTo(t_o);
     }
 }

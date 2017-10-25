@@ -1,6 +1,8 @@
 package ladysnake.models;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import ladysnake.helpers.json.I_JsonSerializable;
 import ladysnake.helpers.utils.I_Stringify;
 import ladysnake.helpers.utils.Pair;
 
@@ -13,7 +15,7 @@ import java.util.List;
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class DBAttribute implements I_Stringify{
+public class DBAttribute implements I_Stringify, I_JsonSerializable{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,6 +61,32 @@ public class DBAttribute implements I_Stringify{
             return I_Stringify.STRINGIFY_ERROR_MESSAGE;
     }
 
+    @Override
+    public JsonElement toJson(){
+        JsonObject obj = new JsonObject();
+
+        obj.addProperty(NAME, this.name);
+        obj.addProperty(DBTYPE, this.dbtype);
+
+        return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DBAttribute)) return false;
+
+        DBAttribute that = (DBAttribute) o;
+
+        return name.equals(that.name) && dbtype.equals(that.dbtype);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + dbtype.hashCode();
+        return result;
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class methods
     ////////////////////////////////////////////////////////////////////////////////////////////
