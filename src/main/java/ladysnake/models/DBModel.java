@@ -3,7 +3,6 @@ package ladysnake.models;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import ladysnake.helpers.json.I_JsonSerializable;
 import ladysnake.helpers.utils.I_Stringify;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.stream.StreamSupport;
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class DBModel implements I_Stringify, I_JsonSerializable{
+public class DBModel implements DBGranule{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,7 +38,7 @@ public class DBModel implements I_Stringify, I_JsonSerializable{
     private DBModel(String name){
         this.name = name;
         this.attributes = new ArrayList<>();
-        AvailableModels.add(this); //register this DBModel as an available model
+        AvailableGranules.add(this); //register this DBModel as an available model
     }
 
     /**Default constructor

@@ -9,15 +9,15 @@ import ladysnake.helpers.utils.I_Stringify;
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class DBTransactionAction implements I_Stringify, I_JsonSerializable,Comparable<DBTransactionAction>{
+public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Comparable<DBTransactionAction>{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
     /**A {@link String} containing the name of the source of this {@link DBTransactionAction}*/
     protected String source;
 
-    /**A {@link DBModel} that is the target of this {@link DBTransactionAction}*/
-    protected DBModel target;
+    /**A {@link DBGranule} that is the target of this {@link DBTransactionAction}*/
+    protected DBGranule target;
 
     /**The lock used for this {@link DBTransactionAction}*/
     protected E_DBLockTypes lock;
@@ -38,11 +38,11 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable,Comp
     /**Advanced constructor
      * @param source being the source of this {@link DBTransactionAction} (an identifier)
      * @param index being the index in the execution of a {@link DBTransaction}
-     * @param target being the {@link DBModel} targeted by this {@link DBTransactionAction}
+     * @param target being the {@link DBGranule} targeted by this {@link DBTransactionAction}
      * @param lock being the lock required/used by this {@link DBTransactionAction}
      * @param type being the type of action of this {@link DBTransactionAction}
      */
-    public DBTransactionAction(String source, int index, DBModel target, E_DBLockTypes lock, E_DBTransactionActionTypes type){
+    public DBTransactionAction(String source, int index, DBGranule target, E_DBLockTypes lock, E_DBTransactionActionTypes type){
         this.source = source;
         this.index = index;
         this.target = target;
@@ -63,8 +63,8 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable,Comp
         this(
                 source,
                 index,
-                AvailableModels.get(target),
-                E_DBLockTypes.get(lock),
+                AvailableGranules.get(target),
+                E_DBLockTypes.get(lock.equals("") ? "NONE" : lock),
                 E_DBTransactionActionTypes.get(type)
         );
     }
@@ -124,7 +124,7 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable,Comp
 
         return index == that.index
                 && executed == that.executed
-                && source.equals(that.source)
+                && source.equalsIgnoreCase(that.source)
                 && target.equals(that.target)
                 && lock == that.lock
                 && type == that.type;

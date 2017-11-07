@@ -10,7 +10,8 @@ public enum E_DBLockTypes {
     SE("SharedExclusive", 2),
     S("Shared", 3),
     UE("UpdateExtended", 4),
-    U("Update", 5);
+    U("Update", 5),
+    NONE("None", 6);
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
@@ -74,14 +75,16 @@ public enum E_DBLockTypes {
     ////Class properties
     ////////////////////////////////////////////////////////////////////////////////////////////
     /**A compatibility matrix*/
+    //                             x y
     public static boolean[][] compatibility =  {
-            //  y\x      XE    X       UE    U      SE    S
-           /*XE*/    {false, false, false, false, false, false},
-           /*X*/      {false, false, false, false, false, false},
-            /*UE*/  {false, false, false, false, true, true},
-            /*U*/    {false, false, false, false, true, true},
-            /*SE*/  {false, false, true, true, true, true},
-            /*S*/    {false, false, true, true, true, true}
+            //  y\x      XE         X     UE    U      SE    S      NONE
+           /*XE*/       {false, false, false, false, false, false, false},
+           /*X*/         {false, false, false, false, false, false, false},
+            /*UE*/      {false, false, false, false, true, true, false},
+            /*U*/        {false, false, false, false, true, true, false},
+            /*SE*/      {false, false, true, true, true, true, true},
+            /*S*/        {false, false, true, true, true, true, true},
+            /*NONE*/ {false, false, false, false, true, true, true}
 
             //How it works: X is compatible with Y if compatibility[X][Y] is true
     };

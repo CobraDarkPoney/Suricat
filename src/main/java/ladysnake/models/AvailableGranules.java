@@ -7,22 +7,22 @@ import java.util.List;
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"WeakerAccess","unused"})
-public class AvailableModels {
+public class AvailableGranules {
     /**The list of available models*/
-    public final static List<DBModel> models = new ArrayList<>();
+    public static List<DBGranule> granules = new ArrayList<>();
 
     /**A handy method to add a model to the list of available models
-     * @param model being the {@link DBModel} to add
+     * @param model being the {@link DBGranule} to add
      * @return TRUE if added, FALSE otherwise
      */
-    public final static boolean add(DBModel model){
-        return AvailableModels.models.add(model);
+    public static boolean add(DBGranule model){
+        return AvailableGranules.granules.add(model);
     }
 
     /**A handy method that retrieves a model from its name*/
-    public final static DBModel get(String name){
-        return AvailableModels.models.stream()
-                .filter(model -> model.getName().equals(name))
+    public static DBGranule get(String name){
+        return AvailableGranules.granules.stream()
+                .filter(granule -> granule.getName().equals(name))
                 .findFirst()
                 .orElse(null);
     }
