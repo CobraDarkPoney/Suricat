@@ -19,7 +19,10 @@ public class AvailableGranules {
         return AvailableGranules.granules.add(model);
     }
 
-    /**A handy method that retrieves a model from its name*/
+    /**A handy method that retrieves a model from its name
+     *@param name being the name of the DBGranule to retrieve
+     * @return the {@link DBGranule} if found, NULL otherwise
+     */
     public static DBGranule get(String name){
         return AvailableGranules.granules.stream()
                 .filter(granule -> granule.getName().equals(name))

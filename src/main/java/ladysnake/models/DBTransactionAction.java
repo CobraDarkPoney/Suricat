@@ -31,10 +31,11 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
     /**Execution flag*/
     protected boolean executed;
 
+
+    
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-
     /**Advanced constructor
      * @param source being the source of this {@link DBTransactionAction} (an identifier)
      * @param index being the index in the execution of a {@link DBTransaction}
@@ -69,6 +70,8 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
         );
     }
 
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +79,7 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
      * @return this {@link DBTransactionAction} (for chaining purposes)
      */
     public DBTransactionAction complete(){
-        this.executed = false;
+        this.executed = true;
         return this;
     }
 
