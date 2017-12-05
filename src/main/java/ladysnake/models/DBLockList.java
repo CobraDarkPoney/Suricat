@@ -104,10 +104,13 @@ public class DBLockList extends ArrayList<DBLockList.Lock>{
             return false;
 
         super.remove(lock);
-        if(this.hasWaitingOn(lock.getTarget())){}
-        //TODO: Fin de l'implémentation ;  si il y a des transactions en attente, les mettre dans la "file" d'exécution "in-place"
-
-
+        if(this.hasWaitingOn(lock.getTarget())){
+            this.getWaitingLocksOn(lock.getTarget())
+            .forEach(this::add);
+        }
         return true;//TMP
+
+        //TODO: Fin de l'implémentation ;  si il y a des transactions en attente, les mettre dans la "file" d'exécution "in-place"
+        //Done ?
     }
 }
