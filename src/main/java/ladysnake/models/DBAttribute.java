@@ -3,6 +3,7 @@ package ladysnake.models;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import ladysnake.helpers.json.I_JsonSerializable;
+import ladysnake.helpers.utils.I_MightNoNullParams;
 import ladysnake.helpers.utils.I_Stringify;
 import ladysnake.helpers.utils.Pair;
 
@@ -35,8 +36,11 @@ public class DBAttribute implements DBGranule{
      * @param dbtype being the database type of this {@link DBAttribute}
      */
     public DBAttribute(String name, String dbtype){
+        this.assertParamsAreNotNull(name, dbtype);
+
         this.name = name;
         this.dbtype = dbtype.toUpperCase();
+        AvailableGranules.add(this);
     }
 
 
@@ -53,6 +57,8 @@ public class DBAttribute implements DBGranule{
 
     @Override
     public String stringify(String tabLevel) {
+        this.assertParamsAreNotNull(tabLevel);
+
         if(I_Stringify.isTab(tabLevel)){
             String ret = "";
 
@@ -101,6 +107,8 @@ public class DBAttribute implements DBGranule{
      * @return a {@link Class}
      */
     public static Class getJavaTypeFromDBType(String dbtype){
+        I_MightNoNullParams.assertNoneNull(dbtype);
+
         return JdbcToJava.stream()
                     .filter(e -> e.first().equals(JDBCType.valueOf(dbtype.toUpperCase())))
                     .findFirst()
@@ -113,6 +121,8 @@ public class DBAttribute implements DBGranule{
      * @return a {@link DBAttribute}
      */
     public static DBAttribute fromJson(JsonObject obj){
+        I_MightNoNullParams.assertNoneNull(obj);
+
         String dbtype = obj.get(DBAttribute.DBTYPE).getAsString();
         String name = obj.get(DBAttribute.NAME).getAsString();
 

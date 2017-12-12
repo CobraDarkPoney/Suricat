@@ -1,12 +1,14 @@
 package ladysnake.views;
 
+import ladysnake.helpers.utils.I_MightNoNullParams;
+
 import javax.swing.*;
 
 /**
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class TaggedComponent{
+public class TaggedComponent implements I_MightNoNullParams{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,6 +24,8 @@ public class TaggedComponent{
      * @param component being the component itself
      */
     public TaggedComponent(String tag, JComponent component){
+        this.assertParamsAreNotNull(tag, component);
+
         this.component = component;
         this.tag = tag;
     }

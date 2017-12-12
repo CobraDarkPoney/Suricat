@@ -1,11 +1,13 @@
 package ladysnake.models;
 
+import ladysnake.helpers.utils.I_MightNoNullParams;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class DBLockList extends ArrayList<DBLockList.Lock>{
+public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoNullParams{
     public class Lock{
         protected String source;
         protected DBGranule target;
@@ -38,9 +40,9 @@ public class DBLockList extends ArrayList<DBLockList.Lock>{
 
             Lock lock = (Lock) o;
 
-            if (!getSource().equals(lock.getSource())) return false;
-            if (!getTarget().equals(lock.getTarget())) return false;
-            return getType() == lock.getType();
+            return getSource().equals(lock.getSource())
+                    && getTarget().equals(lock.getTarget())
+                    && getType() == lock.getType();
         }
 
         @Override
@@ -60,6 +62,8 @@ public class DBLockList extends ArrayList<DBLockList.Lock>{
     }
 
     public boolean hasLockOn(DBGranule granule){
+        this.assertParamsAreNotNull(granule);
+
         return this.stream()
         .map(DBLockList.Lock::getTarget)
         .filter(target -> target.equals(granule))
@@ -68,10 +72,16 @@ public class DBLockList extends ArrayList<DBLockList.Lock>{
     }
 
     public boolean hasWaitingOn(DBGranule granule){
-        return !this.waiting.isEmpty();
+        this.assertParamsAreNotNull(granule);
+
+        return this.waiting.stream()
+        .filter(wait -> wait.getTarget().equals(granule))
+        .count() != 0;
     }
 
     public List<E_DBLockTypes> getLockTypesOn(DBGranule granule){
+        this.assertParamsAreNotNull(granule);
+
         return this.stream()
         .filter(lock -> lock.getTarget().equals(granule))
         .map(DBLockList.Lock::getType)
@@ -79,21 +89,25 @@ public class DBLockList extends ArrayList<DBLockList.Lock>{
     }
 
     public List<DBLockList.Lock> getWaitingLocksOn(DBGranule granule){
+        this.assertParamsAreNotNull(granule);
+
         return this.waiting.stream()
         .filter(lock -> lock.getTarget().equals(granule))
         .collect(Collectors.toList());
     }
 
     public boolean add(DBLockList.Lock lock){
+        this.assertParamsAreNotNull(lock);
+
         DBGranule target = lock.getTarget();
         if(this.hasLockOn(target)){
             List<E_DBLockTypes> lockTypes = this.getLockTypesOn(target);
-            boolean compatible = lockTypes.stream()
+            boolean incompatible = lockTypes.stream()
             .filter(lockType -> lock.getType().compatibleWith(lockType))
             .collect(Collectors.toList())
             .isEmpty();
 
-            if(!compatible)
+            if(!incompatible)
                 return this.waiting.add(lock);
         }
         return super.add(lock);
@@ -102,6 +116,8 @@ public class DBLockList extends ArrayList<DBLockList.Lock>{
     public boolean remove(DBLockList.Lock lock){
         if(!this.contains(lock))
             return false;
+
+        this.assertParamsAreNotNull(lock);
 
         super.remove(lock);
         if(this.hasWaitingOn(lock.getTarget())){

@@ -1,12 +1,13 @@
 package ladysnake.helpers.json;
 
 import com.google.gson.JsonElement;
+import ladysnake.helpers.utils.I_MightNoNullParams;
 
 /**An interface used to designate classes that can be serialized to the JSON format
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"WeakerAccess","unused"})
-public interface I_JsonSerializable {
+public interface I_JsonSerializable extends I_MightNoNullParams{
     /**A class method that every class implementing {@link I_JsonSerializable} should implement
      * @param element being the {@link JsonElement} (or subclass) to read from
      * @return a {@link I_JsonSerializable} (or subclass) created from the given {@link JsonElement} (or subclass)

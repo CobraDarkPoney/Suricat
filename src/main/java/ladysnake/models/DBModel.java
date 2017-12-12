@@ -3,7 +3,9 @@ package ladysnake.models;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import ladysnake.helpers.utils.I_MightNoNullParams;
 import ladysnake.helpers.utils.I_Stringify;
+import ladysnake.helpers.utils.Params;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +37,8 @@ public class DBModel implements DBGranule{
      * @param name being the name of this {@link DBModel}
      */
     private DBModel(String name){
+        this.assertParamsAreNotNull(name);
+
         this.name = name;
         this.attributes = new ArrayList<>();
         AvailableGranules.add(this); //register this DBModel as an available model
@@ -46,6 +50,7 @@ public class DBModel implements DBGranule{
      */
     public DBModel(String name, DBAttribute first_attr){
         this(name);
+        this.assertParamsAreNotNull(name, first_attr);
         this.attributes.add(first_attr);
     }
 
@@ -63,6 +68,7 @@ public class DBModel implements DBGranule{
      */
     public DBModel(String name, Collection<? extends DBAttribute> attributes){
         this(name);
+        this.assertParamsAreNotNull(name, attributes);
         this.attributes.addAll(attributes);
     }
 
@@ -85,6 +91,8 @@ public class DBModel implements DBGranule{
 
     @Override
     public String stringify(String tabLevel) {
+        this.assertParamsAreNotNull(tabLevel);
+
         if(I_Stringify.isTab(tabLevel)){
             String ret = "";
 
@@ -153,6 +161,8 @@ public class DBModel implements DBGranule{
     ////Class methods
     ////////////////////////////////////////////////////////////////////////////////////////////
     public static DBModel fromJson(JsonObject obj){
+        I_MightNoNullParams.assertNoneNull(obj);
+
         String name = obj.get(NAME).getAsString();
         JsonArray attrs = obj.get(ATTR_ARR).getAsJsonArray();
 

@@ -3,6 +3,7 @@ package ladysnake.models;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import ladysnake.helpers.json.I_JsonSerializable;
+import ladysnake.helpers.utils.I_MightNoNullParams;
 import ladysnake.helpers.utils.I_Stringify;
 
 /** A class representing a {@link DBTransaction}'s Action
@@ -44,6 +45,8 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
      * @param type being the type of action of this {@link DBTransactionAction}
      */
     public DBTransactionAction(String source, int index, DBGranule target, E_DBLockTypes lock, E_DBTransactionActionTypes type){
+        this.assertParamsAreNotNull(source, index, target, lock, type);
+
         this.source = source;
         this.index = index;
         this.target = target;
@@ -85,6 +88,11 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
 
     @Override
     public String stringify(String tabLevel) {
+        this.assertParamsAreNotNull(tabLevel);
+
+        if(!I_Stringify.isTab(tabLevel))
+            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
+
         String ret = "";
 
         ret += tabLevel + "<DBTransactionAction>\n";
@@ -100,6 +108,8 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
 
     @Override
     public int compareTo(DBTransactionAction other) {
+        this.assertParamsAreNotNull(other);
+
         Integer t_i = this.index;
         Integer t_o = other.index;
 
@@ -171,6 +181,8 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
      * @return a {@link DBTransactionAction} generated from the given {@link JsonObject}
      */
     public static DBTransactionAction fromJson(JsonObject obj){
+        I_MightNoNullParams.assertNoneNull(obj);
+
         String source = obj.get(SOURCE).getAsString();
         int index = obj.get(INDEX).getAsInt();
         String target = obj.get(TARGET).getAsString();

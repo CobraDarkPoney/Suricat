@@ -1,5 +1,7 @@
 package ladysnake.models;
 
+import ladysnake.helpers.utils.I_MightNoNullParams;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"WeakerAccess","unused"})
-public class AvailableGranules {
+public abstract class AvailableGranules {
     /**The list of available models*/
     public static List<DBGranule> granules = new ArrayList<>();
 
@@ -16,6 +18,8 @@ public class AvailableGranules {
      * @return TRUE if added, FALSE otherwise
      */
     public static boolean add(DBGranule model){
+        I_MightNoNullParams.assertNoneNull(model);
+
         return AvailableGranules.granules.add(model);
     }
 
@@ -24,6 +28,8 @@ public class AvailableGranules {
      * @return the {@link DBGranule} if found, NULL otherwise
      */
     public static DBGranule get(String name){
+        I_MightNoNullParams.assertNoneNull(name);
+
         return AvailableGranules.granules.stream()
                 .filter(granule -> granule.getName().equals(name))
                 .findFirst()

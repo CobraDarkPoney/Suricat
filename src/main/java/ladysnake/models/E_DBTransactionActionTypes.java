@@ -1,5 +1,7 @@
 package ladysnake.models;
 
+import ladysnake.helpers.utils.I_MightNoNullParams;
+
 /**An Enum representing most Transaction Action Types that Databases use
  * @author Ludwig GUERIN
  */
@@ -18,7 +20,11 @@ public enum E_DBTransactionActionTypes {
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-    E_DBTransactionActionTypes(String desc){ this.description = desc; }
+    E_DBTransactionActionTypes(String desc){
+        I_MightNoNullParams.assertNoneNull(desc);
+
+        this.description = desc;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
@@ -38,6 +44,8 @@ public enum E_DBTransactionActionTypes {
      * @return the desired {@link E_DBTransactionActionTypes} if it exists
      */
     public static E_DBTransactionActionTypes get(String name){
+        I_MightNoNullParams.assertNoneNull(name);
+
         return E_DBTransactionActionTypes.valueOf(name.toLowerCase());
     }
 

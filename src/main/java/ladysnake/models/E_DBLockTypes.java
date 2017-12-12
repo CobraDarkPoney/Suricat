@@ -1,5 +1,7 @@
 package ladysnake.models;
 
+import ladysnake.helpers.utils.I_MightNoNullParams;
+
 /**An Enum representing most Lock Types used in Databases
  * @author Ludwig GUERIN
  */
@@ -28,6 +30,8 @@ public enum E_DBLockTypes {
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
     E_DBLockTypes(String type, int val){
+        I_MightNoNullParams.assertNoneNull(type, val);
+
         this.lock = type;
         this.index = val;
     }
@@ -56,6 +60,8 @@ public enum E_DBLockTypes {
      * @return TRUE if compatible, FALSE otherwise
      */
     public boolean compatibleWith(E_DBLockTypes otherLock){
+        I_MightNoNullParams.assertNoneNull(otherLock);
+
         return  E_DBLockTypes.compatibility[this.index][otherLock.index];
     }
 
@@ -68,6 +74,8 @@ public enum E_DBLockTypes {
      * @return The created {@link E_DBLockTypes}
      */
     public static E_DBLockTypes get(String name){
+        I_MightNoNullParams.assertNoneNull(name);
+
         return E_DBLockTypes.valueOf(name.toUpperCase());
     }
 

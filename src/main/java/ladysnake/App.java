@@ -1,57 +1,49 @@
 package ladysnake;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import ladysnake.helpers.json.JsonReader;
-import ladysnake.helpers.json.JsonWriter;
 import ladysnake.models.*;
+import ladysnake.views.*;
+//import ladysnake.controllers.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class App {
     private static void out(String msg){  System.out.println(msg); }
 
     public static void main(String[] args){
+        ViewWindow view = new ViewWindow("Fenêtre test", 500, 500);
+        view.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        view.getContentPane().setLayout(new BoxLayout(view.getContentPane(), BoxLayout.Y_AXIS));
+        view.setMinimumSize( view.getPreferredSize() );
+
+        view.addComponent("btn", new JButton("Click"));
+        view.addComponent("label", new JLabel());
+        ((JLabel)view.getComponent("label")).setText("lol");
+
+        MenuBarBuilder menuBuilder = new MenuBarBuilder();
+        JMenuBar menuBar = menuBuilder
+        .addMenu(new JMenu("A Menu"))
+        .setMenuMnemonic("A Menu", KeyEvent.VK_A)
+        .setMenuAccessibleDescription("A Menu", "This is for help")
+        .addMenuItemToMenu("A Menu", new JMenuItem("That's a text item", KeyEvent.VK_T))
+        .setMenuItemAccelerator("A Menu", "That's a text item", KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_MASK))
+        .setMenuItemAccessibleDescription("A Menu", "That's a text item", "This is also for help")
+        .getBuilt();
+        view.setMenubar(menuBar);
+
         try {
-            JsonReader reader = new JsonReader("test.json");
-            JsonWriter writer = new JsonWriter("serializeTest.json");
-
-            JsonArray actions = reader.getAsObject().get(DBTransaction.ACTIONS).getAsJsonArray();
-            DBModel model = DBModel.fromJson(reader.getAsObject().get("models").getAsJsonArray().get(0).getAsJsonObject());
-            DBTransaction transaction = DBTransaction.fromJson(actions);
-            JsonArray serializedActions = transaction.toJson().getAsJsonArray();
-
-            out("Is serialized===read: " + (actions.equals(serializedActions) ? "yep" : "heck no"));
-            writer.writeJsonElement(serializedActions);
-        }catch(Exception e){
+            view.setLookAndFeel(LookAndFeelHub.OS_DEFAULT);
+        } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+            out("Could not change the look and feel");
         }
-    }
+        view.display();
 
-    public static int compare(JsonArray lhs, JsonArray rhs){
-        List<JsonElement> l_list = StreamSupport.stream(lhs.spliterator(), false).collect(Collectors.toList());
-        List<JsonElement> r_list = StreamSupport.stream(rhs.spliterator(), false).collect(Collectors.toList());
-
-        if(l_list.size() != r_list.size())
-            return l_list.size() - r_list.size();
-        else{
-            int diff = 0;
-            /*Collections.sort(l_list);
-            Collections.sort(r_list);*/
-
-            for(int i = 0, size = l_list.size() ; i < size ; i+=1){
-                String a = l_list.get(i).getAsJsonObject().getAsString();
-                String b = r_list.get(i).getAsJsonObject().getAsString();
-                if(!a.equalsIgnoreCase(b))
-                    diff += 1;
-            }
-
-            return diff;
-        }
+        out(menuBuilder.toString());
     }
 }

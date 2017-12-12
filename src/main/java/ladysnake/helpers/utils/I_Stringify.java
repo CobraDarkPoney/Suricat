@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 /**An interface used to declare objects that can use a stringify method
  * @author Ludwig GUERIN
  */
-public interface I_Stringify {
+public interface I_Stringify extends I_MightNoNullParams{
     final static Pattern TAB_RE = Pattern.compile("^\\t*$");
     final static String STRINGIFY_ERROR_MESSAGE = "<stringify> TAB LEVEL NOT TABS  </stringify>";;
 

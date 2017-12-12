@@ -3,6 +3,7 @@ package ladysnake.models;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import ladysnake.helpers.json.I_JsonSerializable;
+import ladysnake.helpers.utils.I_MightNoNullParams;
 import ladysnake.helpers.utils.I_Stringify;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
      */
     public DBTransaction(Collection<? extends DBTransactionAction> collec){
         this();
+        this.assertParamsAreNotNull(collec);
         this.addAll(collec).sort();
     }
 
@@ -56,6 +58,8 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
      * @return this {@link DBTransaction} (for chaining purposes)
      */
     public DBTransaction add(DBTransactionAction action){
+        this.assertParamsAreNotNull(action);
+
         this.actions.add(action);
         return this;
     }
@@ -65,6 +69,8 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
      * @return this {@link DBTransaction} (for chaining purposes)
      */
     public DBTransaction addAll(Collection<? extends DBTransactionAction> actions){
+        this.assertParamsAreNotNull(actions);
+
         this.actions.addAll(actions);
         return this;
     }
@@ -74,6 +80,8 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
      * @return this {@link DBTransaction} (for chaining purposes)
      */
     public DBTransaction sort(Comparator<? super DBTransactionAction> comparator){
+        this.assertParamsAreNotNull(comparator);
+
         this.actions.sort(comparator);
         return this;
     }
@@ -94,6 +102,10 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
 
     @Override
     public String stringify(String tabLevel) {
+        this.assertParamsAreNotNull(tabLevel);
+        if(!I_Stringify.isTab(tabLevel))
+            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
+
         String ret = "";
 
         ret += tabLevel + "<DBTransaction>" + "\n";
@@ -155,6 +167,8 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
      * @return the created {@link DBTransaction}
      */
     public static DBTransaction fromJson(JsonArray obj){
+        I_MightNoNullParams.assertNoneNull(obj);
+
         Collection<DBTransactionAction> actions = StreamSupport.stream(obj.spliterator(), false)
                 .map(JsonElement::getAsJsonObject)
                 .map(DBTransactionAction::fromJson)

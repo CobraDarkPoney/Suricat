@@ -5,7 +5,7 @@ package ladysnake.helpers.utils;
  * @param <L> being the type of the last element of the pair
  */
 @SuppressWarnings("WeakerAccess")
-public class Pair<F, L>{
+public class Pair<F, L> implements I_Stringify{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +49,15 @@ public class Pair<F, L>{
     @Override
     public String toString(){
         return "[" + first().toString() + "," + last().toString() + "]";
+    }
+
+    @Override
+    public String stringify(String tabLevel){
+        this.assertParamsAreNotNull(tabLevel);
+        if(!I_Stringify.isTab(tabLevel))
+            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
+
+        return tabLevel + this.toString();
     }
 
 }
