@@ -1,49 +1,64 @@
 package ladysnake;
 
-import ladysnake.models.*;
+//mport ladysnake.models.*;
 import ladysnake.views.*;
 //import ladysnake.controllers.*;
 
 import javax.swing.*;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class App {
-    private static void out(String msg){  System.out.println(msg); }
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Properties
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ViewsManager vm;
 
-    public static void main(String[] args){
-        ViewWindow view = new ViewWindow("Fenêtre test", 500, 500);
-        view.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        view.getContentPane().setLayout(new BoxLayout(view.getContentPane(), BoxLayout.Y_AXIS));
-        view.setMinimumSize( view.getPreferredSize() );
-
-        view.addComponent("btn", new JButton("Click"));
-        view.addComponent("label", new JLabel());
-        ((JLabel)view.getComponent("label")).setText("lol");
-
-        MenuBarBuilder menuBuilder = new MenuBarBuilder();
-        JMenuBar menuBar = menuBuilder
-        .addMenu(new JMenu("A Menu"))
-        .setMenuMnemonic("A Menu", KeyEvent.VK_A)
-        .setMenuAccessibleDescription("A Menu", "This is for help")
-        .addMenuItemToMenu("A Menu", new JMenuItem("That's a text item", KeyEvent.VK_T))
-        .setMenuItemAccelerator("A Menu", "That's a text item", KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_MASK))
-        .setMenuItemAccessibleDescription("A Menu", "That's a text item", "This is also for help")
-        .getBuilt();
-        view.setMenubar(menuBar);
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Constructors
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    public App(){
+        this.vm = new ViewsManager(App.TITLE, App.DIMENSION);
+        vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        A_View executionView = new ExecutionView();
+        vm.addView(App.EXECUTION_VIEW_TAG, executionView);
+        vm.setCurrentView(App.EXECUTION_VIEW_TAG); //Not necessary -> default behavior
 
         try {
-            view.setLookAndFeel(LookAndFeelHub.OS_DEFAULT);
+            vm.setLookAndFeel(LookAndFeelHub.NIMBUS);
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
             out("Could not change the look and feel");
         }
-        view.display();
+    }
 
-        out(menuBuilder.toString());
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Methods
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    public void run(){
+        vm.display();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Class properties
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    public final static String TITLE = "Suricat";
+    public final static int INIT_WIDTH = 500;
+    public final static int INIT_HEIGHT = 500;
+    public final static Dimension DIMENSION = new Dimension(INIT_WIDTH, INIT_HEIGHT);
+
+    public final static String EXECUTION_VIEW_TAG = "execution";
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////Class methods
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    protected static App make(){
+        return new App();
+    }
+
+    protected static void out(String msg){ System.out.println(msg); }
+
+    public static void main(String[] args){
+        App.make().run();
     }
 }

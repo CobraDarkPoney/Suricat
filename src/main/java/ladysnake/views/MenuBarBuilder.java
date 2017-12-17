@@ -2,6 +2,7 @@ package ladysnake.views;
 
 import javax.swing.*;
 
+import com.sun.istack.internal.Nullable;
 import ladysnake.helpers.utils.I_MightNoNullParams;
 
 import java.util.Arrays;
@@ -29,16 +30,28 @@ public class MenuBarBuilder implements I_MightNoNullParams{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
+    /**Retrieves the {@link JMenuBar} built in its current state in the builder
+     * @return {@link JMenuBar}
+     */
     public JMenuBar getBuilt(){
         return this.menuBar;
     }
 
+    /**Adds a {@link JMenu} to the {@link JMenuBar} under construction
+     * @param menu being the {@link JMenu} to add
+     * @return this {@link MenuBarBuilder}
+     */
     public MenuBarBuilder addMenu(JMenu menu){
         this.assertParamsAreNotNull(menu);
         this.menuBar.add(menu);
         return this;
     }
 
+    /**Sets the mnemonic of a menu given its menuID
+     * @param menuID being the {@link JMenu}'s menuID
+     * @param mnemonic being the desired mnemonic
+     * @return this {@link MenuBarBuilder}
+     */
     public MenuBarBuilder setMenuMnemonic(String menuID, int mnemonic){
         this.assertParamsAreNotNull(menuID, mnemonic);
 
@@ -48,6 +61,11 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return this;
     }
 
+    /**Sets a {@link JMenu}'s accessible description given its menuID
+     * @param menuID being the menuID associated to the desired {@link JMenu}
+     * @param description being the new description
+     * @return this {@link MenuBarBuilder}
+     */
     public MenuBarBuilder setMenuAccessibleDescription(String menuID, String description){
         this.assertParamsAreNotNull(menuID, description);
 
@@ -58,6 +76,10 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return this;
     }
 
+    /**Adds a separator inside of a menu given its menuID
+     * @param menuID being the menuID associated to the desired {@link JMenu}
+     * @return this {@link MenuBarBuilder}
+     */
     public MenuBarBuilder addMenuSeparator(String menuID){
         this.assertParamsAreNotNull(menuID);
 
@@ -68,6 +90,11 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return this;
     }
 
+    /**Adds a{@link JMenuItem} to a {@link JMenu} given its menuID
+     * @param menuID being the menudID associated to the desired {@link JMenu}
+     * @param menuItem being the {@link JMenuItem} being added
+     * @return this {@link MenuBarBuilder}
+     */
     public MenuBarBuilder addMenuItemToMenu(String menuID, JMenuItem menuItem){
         this.assertParamsAreNotNull(menuID, menuItem);
 
@@ -78,6 +105,12 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return this;
     }
 
+    /**Sets a {@link JMenuItem}'s accelerator given its menuItemID and menuID associated to the {@link JMenu} it is in
+     * @param menuID being the {@link JMenu}'s menuID
+     * @param menuItemId being the {@link JMenuItem}'s menuItemID
+     * @param accelerator being the new accelerator
+     * @return this {@link MenuBarBuilder}
+     */
     public MenuBarBuilder setMenuItemAccelerator(String menuID, String menuItemId, KeyStroke accelerator){
         this.assertParamsAreNotNull(menuItemId);
 
@@ -89,6 +122,12 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return this;
     }
 
+    /**Sets a {@link JMenuItem}'s mnemonic
+     * @param menuID being the {@link JMenu}'s ID
+     * @param menuItemID being the {@link JMenuItem}'s ID
+     * @param mnemonic being the new mnemonic
+     * @return this {@link MenuBarBuilder}
+     */
     public MenuBarBuilder setMenuItemMnemonic(String menuID, String menuItemID, int mnemonic){
         this.assertParamsAreNotNull(menuID, menuItemID, mnemonic);
 
@@ -100,6 +139,12 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return this;
     }
 
+    /**Sets the {@link JMenuItem}'s accessible description
+     * @param menuID being the {@link JMenu}'s ID
+     * @param menuItemID being the {@link JMenuItem}'s ID
+     * @param description being the new description
+     * @return this {@link MenuBarBuilder}
+     */
     public MenuBarBuilder setMenuItemAccessibleDescription(String menuID, String menuItemID, String description){
         this.assertParamsAreNotNull(menuID, description);
 
@@ -110,6 +155,10 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return this;
     }
 
+    /**Retrieve the index iof a {@link JMenu} in the inner array of component from its menuID
+     * @param menuID being the {@link JMenu}'s ID
+     * @return the index (or -1 if not found)
+     */
     protected int getIndexForMenu(String menuID){
         this.assertParamsAreNotNull(menuID);
 
@@ -124,6 +173,11 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return -1;
     }
 
+    /**Retrieves a {@link JMenu} from its menuID
+     * @param menuID being the menuID associated to the desired
+     * @return NULL if not found, otherwise the {@link JMenu}
+     */
+    @Nullable
     protected JMenu getMenu(String menuID){
         this.assertParamsAreNotNull(menuID);
 
@@ -134,6 +188,11 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return this.menuBar.getMenu( index );
     }
 
+    /**Get the index of a {@link JMenuItem}  in the inner array of the given {@link JMenu} from its ID and the item's ID
+     * @param menuID being the {@link JMenu}'s ID
+     * @param menuItemID being the {@link JMenuItem}'s ID
+     * @return -1 if not found, the index otherwise
+     */
     protected int getIndexForMenuItemInMenu(String menuID, String menuItemID){
         this.assertParamsAreNotNull(menuID, menuItemID);
 
@@ -151,6 +210,12 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         return -1;
     }
 
+    /**Retrieves a {@link JMenuItem} from its ID
+     * @param menuID being the {@link JMenu}'s ID
+     * @param menuItemID being the {@link JMenuItem}'s ID
+     * @return NULL if not found, the {@link JMenuItem} otherwise
+     */
+    @Nullable
     protected JMenuItem getMenuItemFromMenu(String menuID, String menuItemID){
         this.assertParamsAreNotNull(menuID, menuItemID);
 
