@@ -53,6 +53,10 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
+    public List<DBTransactionAction> getActions(){ return new ArrayList<>(this.actions); }
+
+    public Stream<DBTransactionAction> getActionsStream(){ return this.getActions().stream(); }
+
     /**Add a {@link DBTransactionAction} to this {@link DBTransaction}
      * @param action being the {@link DBTransactionAction} that will be added
      * @return this {@link DBTransaction} (for chaining purposes)

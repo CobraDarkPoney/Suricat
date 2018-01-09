@@ -11,7 +11,7 @@ import java.util.Set;
  * @author Ludwig GUERIN
  */
 @SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
-public class ViewWindow extends JFrame implements I_MightNoNullParams, I_TaggedComponentContainer<JFrame>{
+public class ViewWindow extends JFrame implements I_MightNoNullParams, I_TaggedComponentContainer{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,5 +220,24 @@ public class ViewWindow extends JFrame implements I_MightNoNullParams, I_TaggedC
     public ViewWindow replaceTitle(String title){
         super.setTitle(title);
         return this;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder ret = new StringBuilder();
+        ret.append("<ViewWindow>\n")
+                .append("<SubTaggedComponents>\n");
+
+        this.components.forEach(c -> {
+            ret
+                    .append("\t")
+                    .append(c.toString())
+                    .append("\n");
+        });
+
+        ret .append("</SubTaggedComponents>\n")
+                .append("</ViewWindow>");
+
+        return ret.toString();
     }
 }

@@ -85,6 +85,8 @@ public enum E_DBLockTypes {
     /**A compatibility matrix*/
     //                             x y
     public static boolean[][] compatibility =  {
+            //TODO: fix for special cases of NONE (eg. upd)
+
             //  y\x      XE         X     UE    U      SE    S      NONE
            /*XE*/       {false, false, false, false, false, false, false},
            /*X*/         {false, false, false, false, false, false, false},

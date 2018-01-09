@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoNullParams{
-    public class Lock{
+    public static class Lock{
         protected String source;
         protected DBGranule target;
         protected E_DBLockTypes type;
@@ -21,6 +21,8 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
             this.target = target;
             this.type = type;
         }
+
+        public Lock(DBTransactionAction action){ this(action.source, action.target, action.lock); }
 
 
 
@@ -54,11 +56,11 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         }
     }
 
-    protected List<DBLockList.Lock> waiting;
+    protected List<DBLockList.Lock> pending;
 
     public DBLockList(){
         super();
-        this.waiting = new ArrayList<>();
+        this.pending = new ArrayList<>();
     }
 
     public boolean hasLockOn(DBGranule granule){
@@ -71,12 +73,11 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         .size() != 0;
     }
 
-    public boolean hasWaitingOn(DBGranule granule){
+    public boolean hasPendingOn(DBGranule granule){
         this.assertParamsAreNotNull(granule);
 
-        return this.waiting.stream()
-        .filter(wait -> wait.getTarget().equals(granule))
-        .count() != 0;
+        return this.pending.stream()
+        .anyMatch(wait -> wait.getTarget().equals(granule));
     }
 
     public List<E_DBLockTypes> getLockTypesOn(DBGranule granule){
@@ -88,10 +89,10 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         .collect(Collectors.toList());
     }
 
-    public List<DBLockList.Lock> getWaitingLocksOn(DBGranule granule){
+    public List<DBLockList.Lock> getPendingLocksOn(DBGranule granule){
         this.assertParamsAreNotNull(granule);
 
-        return this.waiting.stream()
+        return this.pending.stream()
         .filter(lock -> lock.getTarget().equals(granule))
         .collect(Collectors.toList());
     }
@@ -108,21 +109,28 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
             .isEmpty();
 
             if(!incompatible)
-                return this.waiting.add(lock);
+                return this.pending.add(lock);
         }
         return super.add(lock);
     }
 
     public boolean remove(DBLockList.Lock lock){
+        this.assertParamsAreNotNull(lock);
+
         if(!this.contains(lock))
             return false;
 
-        this.assertParamsAreNotNull(lock);
+        //this.assertParamsAreNotNull(lock);
 
         super.remove(lock);
-        if(this.hasWaitingOn(lock.getTarget())){
-            this.getWaitingLocksOn(lock.getTarget())
+        if(this.hasPendingOn(lock.getTarget())){
+            this.getPendingLocksOn(lock.getTarget()).stream()
+            .filter(pending -> !pending.getType().compatibleWith(lock.getType()))
             .forEach(this::add);
+
+            //This will select the pending locks which were not compatible with the
+            //lock that we're removing (means that the removed one was blocking)
+            //and add those only to the execution queue
         }
         return true;//TMP
 

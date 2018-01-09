@@ -86,6 +86,11 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
         return this;
     }
 
+    public boolean willFree(){
+        //TODO: TRUE if frees granule
+        return true;
+    }
+
     @Override
     public String stringify(String tabLevel) {
         this.assertParamsAreNotNull(tabLevel);

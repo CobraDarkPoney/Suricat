@@ -164,8 +164,9 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
         A_View view = this.getView(tag);//The VM contains the view -> not null
         if( !this.isCurrentView(tag, view) ){
             this.removeComponent(VIEW_TAG)
-                    .addComponent(VIEW_TAG, view.getViewPanel())
-                    .replaceTitle(view.getViewTitle());
+            .addComponent(VIEW_TAG, view.getViewPanel())
+            .replaceTitle(view.getViewTitle());
+
             if(!Objects.isNull(view.getViewMenuBar()))
                 this.setMenubar(view.getViewMenuBar());
 

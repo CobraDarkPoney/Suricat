@@ -31,8 +31,8 @@ public abstract class AvailableGranules {
         I_MightNoNullParams.assertNoneNull(name);
 
         return AvailableGranules.granules.stream()
-                .filter(granule -> granule.getName().equals(name))
-                .findFirst()
-                .orElse(null);
+        .filter(granule -> granule.getName().equals(name))
+        .findFirst()
+        .orElse(null);
     }
 }

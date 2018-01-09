@@ -2,7 +2,7 @@ package ladysnake;
 
 //mport ladysnake.models.*;
 import ladysnake.views.*;
-//import ladysnake.controllers.*;
+import ladysnake.controllers.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +19,17 @@ public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     public App(){
         this.vm = new ViewsManager(App.TITLE, App.DIMENSION);
-        vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        A_View executionView = new ExecutionView();
-        vm.addView(App.EXECUTION_VIEW_TAG, executionView);
-        vm.setCurrentView(App.EXECUTION_VIEW_TAG); //Not necessary -> default behavior
+        this.vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        A_View executionView = new ExecutionView(this.vm);
+        A_View homeView = new HomeView(this.vm);
+
+        this.vm
+        .addView(App.EXECUTION_VIEW_TAG, executionView)
+        .addView(App.HOME_VIEW_TAG, homeView)
+        .setCurrentView(App.EXECUTION_VIEW_TAG); //Not necessary -> default behavior
+
+        A_Controller executionController = new ExecutionController(executionView);
+        A_Controller homeController = new HomeController(homeView);
 
         try {
             vm.setLookAndFeel(LookAndFeelHub.NIMBUS);
@@ -48,6 +55,7 @@ public class App {
     public final static Dimension DIMENSION = new Dimension(INIT_WIDTH, INIT_HEIGHT);
 
     public final static String EXECUTION_VIEW_TAG = "execution";
+    public final static String HOME_VIEW_TAG = "home";
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class methods
@@ -56,7 +64,7 @@ public class App {
         return new App();
     }
 
-    protected static void out(String msg){ System.out.println(msg); }
+    protected static void out(Object msg){ System.out.println(msg); }
 
     public static void main(String[] args){
         App.make().run();
