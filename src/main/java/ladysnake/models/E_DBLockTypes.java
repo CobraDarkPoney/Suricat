@@ -61,7 +61,7 @@ public enum E_DBLockTypes {
      */
     public boolean compatibleWith(E_DBLockTypes otherLock){
         I_MightNoNullParams.assertNoneNull(otherLock);
-
+        //TODO: Upgrade with special cases (eg. None cases)  :: Théowen ?
         return  E_DBLockTypes.compatibility[this.index][otherLock.index];
     }
 
@@ -75,7 +75,6 @@ public enum E_DBLockTypes {
      */
     public static E_DBLockTypes get(String name){
         I_MightNoNullParams.assertNoneNull(name);
-
         return E_DBLockTypes.valueOf(name.toUpperCase());
     }
 
@@ -96,6 +95,6 @@ public enum E_DBLockTypes {
             /*S*/        {false, false, true, true, true, true, true},
             /*NONE*/ {false, false, false, false, true, true, true}
 
-            //How it works: X is compatible with Y if compatibility[X][Y] is true
+            //How it works: X is compatible with Y if compatibility[Y[X] is true
     };
 }

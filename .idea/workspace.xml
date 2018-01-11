@@ -2,41 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41506400-ecab-4827-bbeb-0f277748e199" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/controllers/A_Controller.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/controllers/ExecutionController.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/controllers/HomeController.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/models/DBTransactionExecution.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/views/HomeView.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/App.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/App.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/A_View.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/A_View.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/ExecutionView.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/ExecutionView.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/I_TaggedComponentContainer.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/I_TaggedComponentContainer.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/LookAndFeelHub.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/LookAndFeelHub.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/MenuBarBuilder.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/MenuBarBuilder.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/SharedMenuBar$1.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/SharedMenuBar$1.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/SharedMenuBar.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/SharedMenuBar.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/TaggedComponent.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/TaggedComponent.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/ViewPanel.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/ViewPanel.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/ViewWindow.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/ViewWindow.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ladysnake/views/ViewsManager.class" afterPath="$PROJECT_DIR$/out/production/classes/ladysnake/views/ViewsManager.class" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/App.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/App.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/models/AvailableGranules.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/models/AvailableGranules.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/models/DBLockList.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/models/DBLockList.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/models/DBTransaction.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/models/DBTransaction.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/models/DBTransactionAction.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/models/DBTransactionAction.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBLockTypes.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBLockTypes.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBTransactionActionTypes.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBTransactionActionTypes.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/views/A_View.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/views/A_View.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/views/ExecutionView.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/views/ExecutionView.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/views/I_TaggedComponentContainer.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/views/I_TaggedComponentContainer.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/views/TaggedComponent.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/views/TaggedComponent.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/views/ViewPanel.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/views/ViewPanel.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/views/ViewWindow.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/views/ViewWindow.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ladysnake/views/ViewsManager.java" afterPath="$PROJECT_DIR$/src/main/java/ladysnake/views/ViewsManager.java" />
-      <change beforePath="$PROJECT_DIR$/uml/Models_classDiagram.png" afterPath="$PROJECT_DIR$/uml/Models_classDiagram.png" />
-      <change beforePath="$PROJECT_DIR$/uml/Models_classDiagram.svg" afterPath="$PROJECT_DIR$/uml/Models_classDiagram.svg" />
       <change beforePath="$PROJECT_DIR$/uml/diagrammes.mdj" afterPath="$PROJECT_DIR$/uml/diagrammes.mdj" />
+      <change beforePath="$PROJECT_DIR$/uml/progression Models.png" afterPath="$PROJECT_DIR$/uml/progression Models.png" />
+      <change beforePath="$PROJECT_DIR$/uml/progression Models.svg" afterPath="$PROJECT_DIR$/uml/progression Models.svg" />
+      <change beforePath="$PROJECT_DIR$/uml/progression Models[EN].png" afterPath="$PROJECT_DIR$/uml/progression Models[EN].png" />
+      <change beforePath="$PROJECT_DIR$/uml/progression Models[EN].svg" afterPath="$PROJECT_DIR$/uml/progression Models[EN].svg" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -65,7 +37,7 @@
       <file leaf-file-name="App.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ladysnake/App.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="310">
+            <state relative-caret-position="672">
               <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -74,14 +46,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DBLockList.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DBLockList.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ladysnake/models/DBLockList.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1085">
+            <state relative-caret-position="-72">
               <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
               <folding>
                 <element signature="class#Lock#0;class#DBLockList#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="E_DBLockTypes.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBLockTypes.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="93" column="69" lean-forward="true" selection-start-line="93" selection-start-column="69" selection-end-line="93" selection-end-column="69" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -542,8 +524,8 @@
         <option value="$PROJECT_DIR$/src/main/java/ladysnake/models/DBTransaction.java" />
         <option value="$PROJECT_DIR$/src/main/java/ladysnake/models/AvailableGranules.java" />
         <option value="$PROJECT_DIR$/src/main/java/ladysnake/models/DBLockList.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBLockTypes.java" />
         <option value="$PROJECT_DIR$/src/main/java/ladysnake/models/DBTransactionExecution.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBLockTypes.java" />
       </list>
     </option>
   </component>
@@ -567,50 +549,15 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="suricat" type="b2602c69:ProjectViewProjectNode" />
               <item name="Suricat" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="suricat" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Suricat" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="suricat" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Suricat" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="suricat" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Suricat" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="suricat" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Suricat" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="ladysnake" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="suricat" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Suricat" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="ladysnake" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -805,7 +752,6 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21522693" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -824,6 +770,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1012,14 +959,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="552">
           <caret line="68" column="23" lean-forward="false" selection-start-line="68" selection-start-column="23" selection-end-line="68" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#68#126#0" expanded="false" />
-            <element signature="e#263#264#0" expanded="false" />
-            <element signature="e#293#294#0" expanded="false" />
-            <element signature="e#971#972#0" expanded="false" />
-            <element signature="e#1000#1001#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1027,7 +966,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="56">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="16" selection-end-column="92" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1065,9 +1003,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="65">
           <caret line="28" column="51" lean-forward="false" selection-start-line="28" selection-start-column="51" selection-end-line="28" selection-end-column="51" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1075,7 +1010,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
           <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1099,7 +1033,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="57" column="93" lean-forward="false" selection-start-line="57" selection-start-column="93" selection-end-line="57" selection-end-column="93" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1107,7 +1040,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
           <caret line="10" column="4" lean-forward="false" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1115,15 +1047,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="864">
           <caret line="36" column="28" lean-forward="false" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBLockTypes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="87" column="59" lean-forward="false" selection-start-line="87" selection-start-column="59" selection-end-line="87" selection-end-column="59" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1131,7 +1054,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="334">
           <caret line="32" column="50" lean-forward="true" selection-start-line="32" selection-start-column="50" selection-end-line="32" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1155,7 +1077,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1128">
           <caret line="17" column="35" lean-forward="true" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1171,10 +1092,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-602">
           <caret line="26" column="30" lean-forward="true" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
-          <folding>
-            <element signature="e#1166#1167#0" expanded="false" />
-            <element signature="e#1200#1201#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1182,7 +1099,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
           <caret line="36" column="29" lean-forward="false" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1190,19 +1106,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="295">
           <caret line="36" column="38" lean-forward="false" selection-start-line="36" selection-start-column="38" selection-end-line="36" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#892#893#0" expanded="false" />
-            <element signature="e#984#985#0" expanded="false" />
-            <element signature="e#1171#1182#0" expanded="false" />
-            <element signature="e#1542#1543#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ladysnake/App.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
+        <state relative-caret-position="672">
           <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1220,11 +1129,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ladysnake/models/DBLockList.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1085">
+        <state relative-caret-position="-72">
           <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
           <folding>
             <element signature="class#Lock#0;class#DBLockList#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ladysnake/models/E_DBLockTypes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="93" column="69" lean-forward="true" selection-start-line="93" selection-start-column="69" selection-end-line="93" selection-end-column="69" />
+          <folding />
         </state>
       </provider>
     </entry>

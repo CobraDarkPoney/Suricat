@@ -17335,6 +17335,7 @@
 									"visibility": "protected",
 									"isStatic": false,
 									"isLeaf": false,
+									"type": "",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
@@ -17352,6 +17353,7 @@
 									"visibility": "protected",
 									"isStatic": false,
 									"isLeaf": false,
+									"type": "",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
@@ -17385,7 +17387,7 @@
 										"_parent": {
 											"$ref": "AAAAAAFg2ygYMLf6zSE="
 										},
-										"name": "cible",
+										"name": "target",
 										"reference": {
 											"$ref": "AAAAAAFg2yUVGLQcTjA="
 										},
@@ -17701,7 +17703,6 @@
 										"visibility": "public",
 										"navigable": true,
 										"aggregation": "none",
-										"multiplicity": "*",
 										"isReadOnly": false,
 										"isOrdered": false,
 										"isUnique": false,
@@ -17720,6 +17721,7 @@
 										"visibility": "public",
 										"navigable": true,
 										"aggregation": "none",
+										"multiplicity": "*",
 										"isReadOnly": false,
 										"isOrdered": false,
 										"isUnique": false,
@@ -18127,7 +18129,7 @@
 										"_parent": {
 											"$ref": "AAAAAAFg21HIkAwUd58="
 										},
-										"name": "verrous",
+										"name": "locks",
 										"reference": {
 											"$ref": "AAAAAAFg21FLbghS5mg="
 										},
@@ -18174,7 +18176,7 @@
 										"_parent": {
 											"$ref": "AAAAAAFg21LspBCUj9E="
 										},
-										"name": "en attente",
+										"name": "pending",
 										"reference": {
 											"$ref": "AAAAAAFg21FLbghS5mg="
 										},
@@ -20636,7 +20638,7 @@
 									},
 									"edgePosition": 2,
 									"underline": false,
-									"text": "+cible",
+									"text": "+target",
 									"horizontalAlignment": 2,
 									"verticalAlignment": 5,
 									"wordWrap": false
@@ -24029,7 +24031,7 @@
 									"model": {
 										"$ref": "AAAAAAFg20h6bvDipgU="
 									},
-									"visible": true,
+									"visible": false,
 									"enabled": true,
 									"lineColor": "#000000",
 									"fillColor": "#ffffff",
@@ -24132,7 +24134,7 @@
 									"model": {
 										"$ref": "AAAAAAFg20h6bvDjTW4="
 									},
-									"visible": false,
+									"visible": true,
 									"enabled": true,
 									"lineColor": "#000000",
 									"fillColor": "#ffffff",
@@ -24141,18 +24143,19 @@
 									"showShadow": true,
 									"containerChangeable": false,
 									"containerExtending": false,
-									"left": 489,
+									"left": 504,
 									"top": 233,
-									"width": 0,
+									"width": 5.5986328125,
 									"height": 13,
 									"autoResize": false,
-									"alpha": 0.5235987755982988,
-									"distance": 25,
+									"alpha": 1.1542702055890577,
+									"distance": 13,
 									"hostEdge": {
 										"$ref": "AAAAAAFg20h6b/DlgY8="
 									},
 									"edgePosition": 0,
 									"underline": false,
+									"text": "*",
 									"horizontalAlignment": 2,
 									"verticalAlignment": 5,
 									"wordWrap": false
@@ -25200,7 +25203,7 @@
 									},
 									"edgePosition": 0,
 									"underline": false,
-									"text": "+verrous",
+									"text": "+locks",
 									"horizontalAlignment": 2,
 									"verticalAlignment": 5,
 									"wordWrap": false
@@ -25623,7 +25626,7 @@
 									},
 									"edgePosition": 0,
 									"underline": false,
-									"text": "+en attente",
+									"text": "+pending",
 									"horizontalAlignment": 2,
 									"verticalAlignment": 5,
 									"wordWrap": false
