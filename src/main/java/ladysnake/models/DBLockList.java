@@ -1,14 +1,38 @@
 package ladysnake.models;
 
 import ladysnake.helpers.utils.I_MightNoNullParams;
+import ladysnake.helpers.utils.I_Stringify;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoNullParams{
-    public static class Lock{
+public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoNullParams, I_Stringify{
+    @Override
+    public String stringify(String tabLevel) {
+        this.assertParamsAreNotNull(tabLevel);
+
+        if(!I_Stringify.isTab(tabLevel))
+            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
+
+        String ret = "";
+
+        ret += tabLevel + "<DBLockList>\n";
+        ret += tabLevel + "\t" + "locks: \n";
+        ret += this.stream()
+                .map(lock -> lock.stringify(tabLevel + "\t\t"))
+                .reduce("", String::concat) + "\n";
+        ret += tabLevel + "\t" + "pending: \n";
+        ret += this.pending.stream()
+                .map(lock -> lock.stringify(tabLevel + "\t\t"))
+                .reduce("", String::concat) + "\n";
+        ret += tabLevel + "</DBLockList>\n";
+
+        return ret;
+    }
+
+    public static class Lock implements I_MightNoNullParams, I_Stringify{
         protected String source;
         protected DBGranule target;
         protected E_DBLockTypes type;
@@ -53,6 +77,26 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
             result = 31 * result + getTarget().hashCode();
             result = 31 * result + getType().hashCode();
             return result;
+        }
+
+        @Override
+        public String stringify(String tabLevel) {
+            this.assertParamsAreNotNull(tabLevel);
+
+            if(!I_Stringify.isTab(tabLevel))
+                return I_Stringify.STRINGIFY_ERROR_MESSAGE;
+
+            String ret = "";
+
+            ret += tabLevel + "<DBLockList.Lock>\n";
+            ret += tabLevel + "\t" + "source:  " + getSource() + "\n";
+            ret += tabLevel + "\t" + "target: " + "\n";
+            ret += getTarget().stringify(tabLevel + "\t\t") + "\n";
+            ret += tabLevel + "\t" + "type: " + "\n";
+            ret += getType().stringify(tabLevel + "\t\t") + "\n";
+            ret += tabLevel + "</DBLockList.Lock>\n";
+
+            return ret;
         }
     }
 

@@ -1,6 +1,7 @@
 package ladysnake.models;
 
 import ladysnake.helpers.utils.I_MightNoNullParams;
+import ladysnake.helpers.utils.I_Stringify;
 
 /**An Enum representing most Lock Types used in Databases
  * @author Ludwig GUERIN
@@ -38,11 +39,23 @@ public enum E_DBLockTypes {
 
     @Override
     public String toString() {
+        return this.stringify();
+    }
+
+    public String stringify(){return this.stringify("");}
+
+    public String stringify(String tabLevel){
+        I_MightNoNullParams.assertNoneNull(tabLevel);
+
+        if(!I_Stringify.isTab(tabLevel))
+            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
+
         String ret = "";
-        ret += "<E_DBLockTypes>\n";
-        ret += "lock: " + this.lock + "\n";
-        ret += "index: " + this.index + "\n";
-        ret += "</E_DBLockTypes>\n";
+
+        ret += tabLevel + "<E_DBLockTypes>\n";
+        ret += tabLevel + "\t" + "lock: " + this.lock + "\n";
+        ret += tabLevel + "\t" + "index: " + this.index + "\n";
+        ret += tabLevel + "</E_DBLockTypes>\n";
 
         return ret;
     }

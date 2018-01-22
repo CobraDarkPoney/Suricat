@@ -28,10 +28,9 @@ public class DBTransactionExecution {
     }
 
     public DBTransactionExecution stop(){
-        if(!this.isRunning)
-            return this;
+        if(this.isRunning)
+            this.isRunning = false;
 
-        this.isRunning = false;
         return this;
     }
 }
