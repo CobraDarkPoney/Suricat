@@ -1,25 +1,31 @@
 package ladysnake;
 
 //mport ladysnake.models.*;
+import ladysnake.models.ModelsManager;
 import ladysnake.views.*;
 import ladysnake.controllers.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
+    ControllersManager cm;
+    ModelsManager mm;
     ViewsManager vm;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-    public App(){
+    public App() throws IOException {
         this.vm = new ViewsManager(App.TITLE, App.DIMENSION);
         this.vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.mm = ModelsManager.fromFile("test.json");
+        this.cm = new ControllersManager(this.vm, this.mm);
         A_View executionView = new ExecutionView(this.vm);
         A_View homeView = new HomeView(this.vm);
 
@@ -28,8 +34,8 @@ public class App {
         .addView(App.HOME_VIEW_TAG, homeView)
         .setCurrentView(App.EXECUTION_VIEW_TAG); //Not necessary -> default behavior
 
-        A_Controller executionController = new ExecutionController(executionView);
-        A_Controller homeController = new HomeController(homeView);
+        this.cm.addController(App.EXECUTION_VIEW_TAG, new ExecutionController(executionView))
+        .addController(App.HOME_VIEW_TAG, new HomeController(homeView));
 
         try {
             vm.setLookAndFeel(LookAndFeelHub.NIMBUS);
@@ -60,13 +66,13 @@ public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class methods
     ////////////////////////////////////////////////////////////////////////////////////////////
-    protected static App make(){
+    protected static App make() throws IOException {
         return new App();
     }
 
     protected static void out(Object msg){ System.out.println(msg); }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         App.make().run();
     }
 }
