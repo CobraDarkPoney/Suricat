@@ -9,43 +9,23 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoNullParams, I_Stringify{
-    @Override
-    public String stringify(String tabLevel) {
-        this.assertParamsAreNotNull(tabLevel);
-
-        if(!I_Stringify.isTab(tabLevel))
-            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
-
-        String ret = "";
-
-        ret += tabLevel + "<DBLockList>\n";
-        ret += tabLevel + "\t" + "locks: \n";
-        ret += this.stream()
-                .map(lock -> lock.stringify(tabLevel + "\t\t"))
-                .reduce("", String::concat) + "\n";
-        ret += tabLevel + "\t" + "pending: \n";
-        ret += this.pending.stream()
-                .map(lock -> lock.stringify(tabLevel + "\t\t"))
-                .reduce("", String::concat) + "\n";
-        ret += tabLevel + "</DBLockList>\n";
-
-        return ret;
-    }
-
     public static class Lock implements I_MightNoNullParams, I_Stringify{
         protected String source;
         protected DBGranule target;
         protected E_DBLockTypes type;
+        protected boolean freed;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////Constructors
         ////////////////////////////////////////////////////////////////////////////////////////////
-        public Lock(String source, DBGranule target, E_DBLockTypes type){
+        public Lock(String source, DBGranule target, E_DBLockTypes type, boolean freed){
             this.source = source;
             this.target = target;
             this.type = type;
+            this.freed = freed;
         }
 
+        public Lock(String source, DBGranule target, E_DBLockTypes type){ this(source, target, type, false); }
         public Lock(DBTransactionAction action){ this(action.source, action.target, action.lock); }
 
 
@@ -59,6 +39,8 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
 
         public E_DBLockTypes getType(){ return this.type; }
 
+        public boolean hasFreed(){ return this.freed; }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -68,7 +50,8 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
 
             return getSource().equals(lock.getSource())
                     && getTarget().equals(lock.getTarget())
-                    && getType() == lock.getType();
+                    && getType() == lock.getType()
+                    && hasFreed() == lock.hasFreed();
         }
 
         @Override
@@ -76,6 +59,7 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
             int result = getSource().hashCode();
             result = 31 * result + getTarget().hashCode();
             result = 31 * result + getType().hashCode();
+            result = 31 * result + Boolean.valueOf(hasFreed()).hashCode();
             return result;
         }
 
@@ -180,5 +164,29 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
 
         //TODO: Fin de l'implémentation ;  si il y a des transactions en attente, les mettre dans la "file" d'exécution "in-place"
         //Done ?
+    }
+
+
+    @Override
+    public String stringify(String tabLevel) {
+        this.assertParamsAreNotNull(tabLevel);
+
+        if(!I_Stringify.isTab(tabLevel))
+            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
+
+        String ret = "";
+
+        ret += tabLevel + "<DBLockList>\n";
+        ret += tabLevel + "\t" + "locks: \n";
+        ret += this.stream()
+                .map(lock -> lock.stringify(tabLevel + "\t\t"))
+                .reduce("", String::concat) + "\n";
+        ret += tabLevel + "\t" + "pending: \n";
+        ret += this.pending.stream()
+                .map(lock -> lock.stringify(tabLevel + "\t\t"))
+                .reduce("", String::concat) + "\n";
+        ret += tabLevel + "</DBLockList>\n";
+
+        return ret;
     }
 }
