@@ -1,0 +1,95 @@
+{
+	"models": [
+		{
+			"name": "R1",
+			"attributes": [
+				{
+					"name": "R1.A",
+					"dbtype": "VARCHAR"
+				},
+				{
+					"name": "R1.B",
+					"dbtype": "SMALLINT"
+				}
+			]
+		},
+    {
+			"name": "R2",
+			"attributes": [
+				{
+					"name": "R2.A",
+					"dbtype": "VARCHAR"
+				},
+				{
+					"name": "R2.B",
+					"dbtype": "SMALLINT"
+				}
+			]
+		},
+    {
+			"name": "R3",
+			"attributes": [
+				{
+					"name": "R3.A",
+					"dbtype": "VARCHAR"
+				},
+				{
+					"name": "R3.B",
+					"dbtype": "SMALLINT"
+				}
+			]
+		}
+	],
+
+	"transactions": [
+		{
+			"source": "t1",
+			"index": 1,
+			"lock": "S",
+			"type": "find",
+			"target": "R1"
+		},
+    {
+			"source": "t1",
+			"index": 2,
+			"lock": "S",
+			"type": "find",
+			"target": "R2"
+		},
+		{
+			"source": "t2",
+			"index": 3,
+			"lock": "XE",
+			"type": "find",
+			"target": "R3"
+		},
+    {
+			"source": "t2",
+			"index": 4,
+			"lock": "XE",
+			"type": "upd",
+			"target": "R3"
+		},
+    {
+			"source": "t2",
+			"index": 5,
+			"lock": "XE",
+			"type": "find",
+			"target": "R2"
+		},
+    {
+			"source": "t1",
+			"index": 6,
+			"lock": "S",
+			"type": "find",
+			"target": "R3"
+	},
+    {
+			"source": "t2",
+			"index": 7,
+			"lock": "XE",
+			"type": "commit",
+			"target": "R2"
+		}
+	]
+}

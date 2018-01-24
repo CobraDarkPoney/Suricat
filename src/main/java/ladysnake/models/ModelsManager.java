@@ -15,6 +15,7 @@ import java.util.stream.StreamSupport;
 public class ModelsManager implements I_JsonSerializable{
     protected List<DBModel> tables;
     protected DBTransaction transaction;
+    protected DBTransactionExecution execution;
 
     public ModelsManager(JsonObject obj){
         this.tables = new ArrayList<>();
@@ -28,11 +29,14 @@ public class ModelsManager implements I_JsonSerializable{
         .forEach(this.tables::add);
 
         this.transaction = DBTransaction.fromJson(transactions);
+        this.execution = new DBTransactionExecution(this.transaction);
     }
 
     public List<DBModel> getTables(){ return this.tables; }
     public List<DBModel> getModels(){ return this.getTables(); }
     public DBTransaction getTransaction() { return this.transaction; }
+    public DBTransactionExecution getExecution() { return execution; }
+    public DBLockList getLockList(){ return this.getExecution().getLockList(); }
 
     @Override
     public JsonElement toJson() {

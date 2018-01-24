@@ -14,19 +14,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-/**TODO: Modify UML + add functionnalities (solve execution, etc...) + add classes (lockStack, executionGraph, waitingGraph, etc...)
- */
 
 /**A class representing a Transaction occurring in a Database
  * @author Ludwig GUERIN
  */
-@SuppressWarnings({"WeakerAccess","unused"})
+@SuppressWarnings({"unchecked", "unused", "WeakerAccess", "SpellCheckingInspection"})
 public class DBTransaction implements I_Stringify, I_JsonSerializable{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
     /**The list of {@link DBTransactionAction} occuring in this {@link DBTransaction}*/
     protected List<DBTransactionAction> actions;
+
+    /**The transaction failed because it did an illegal action because it's stupid*/
+    List<String> failed;
 
 
 
@@ -37,6 +38,7 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
      */
     public DBTransaction(){
         this.actions = new ArrayList<>();
+        this.failed = new ArrayList<>();
     }
 
     /**Advanced constructor : from a {@link Collection}
@@ -56,6 +58,13 @@ public class DBTransaction implements I_Stringify, I_JsonSerializable{
     public List<DBTransactionAction> getActions(){ return new ArrayList<>(this.actions); }
 
     public Stream<DBTransactionAction> getActionsStream(){ return this.getActions().stream(); }
+
+    public boolean hasFailed(String source){ return this.failed.contains(source); }
+
+    public DBTransaction setFailed(String source) {
+      this.failed.add(source);
+      return this;
+    }
 
     /**Add a {@link DBTransactionAction} to this {@link DBTransaction}
      * @param action being the {@link DBTransactionAction} that will be added

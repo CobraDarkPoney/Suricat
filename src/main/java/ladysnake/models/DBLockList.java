@@ -1,14 +1,14 @@
 package ladysnake.models;
 
+import ladysnake.helpers.events.*;
 import ladysnake.helpers.utils.I_MightNoNullParams;
 import ladysnake.helpers.utils.I_Stringify;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
-public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoNullParams, I_Stringify{
+@SuppressWarnings({"unchecked", "unused", "WeakerAccess", "SpellCheckingInspection"})
+public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoNullParams, I_Stringify, I_Observable{
     public static class Lock implements I_MightNoNullParams, I_Stringify{
         protected String source;
         protected DBGranule target;
@@ -40,6 +40,11 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         public E_DBLockTypes getType(){ return this.type; }
 
         public boolean hasFreed(){ return this.freed; }
+
+        public boolean stricterThan(DBLockList.Lock rhs){
+          return this.getType().stricterThan(rhs.getType());
+        }
+
 
         @Override
         public boolean equals(Object o) {
@@ -84,11 +89,37 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         }
     }
 
-    protected List<DBLockList.Lock> pending;
+    //protected List<DBLockList.Lock> pending;
+    protected List<DBTransactionAction> pending;
 
-    public DBLockList(){
+    protected DBTransactionExecution execution;
+
+
+    protected Map<String, List<I_Observer>> observers;
+
+    public DBLockList(DBTransactionExecution execution){
         super();
+        this.execution = execution;
         this.pending = new ArrayList<>();
+        this.observers = new HashMap<>();
+
+        this.registerEvent(DBLockList.ADD_LOCK)
+        .registerEvent(DBLockList.RM_LOCK)
+        .registerEvent(DBLockList.ADD_PENDING)
+        .registerEvent(DBLockList.RM_PENDING);
+    }
+
+    protected DBLockList registerEvent(String eventName){
+        if(!this.eventIsRegistered(eventName))
+            this.getObservers().put(eventName, new ArrayList<>());
+
+        return this;
+    }
+
+    public List<DBLockList.Lock> pendingLocks(){
+      return this.pending.stream()
+      .map(DBLockList.Lock::new)
+      .collect(Collectors.toList());
     }
 
     public boolean hasLockOn(DBGranule granule){
@@ -96,17 +127,27 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
 
         return this.stream()
         .map(DBLockList.Lock::getTarget)
-        .filter(target -> target.equals(granule))
-        .collect(Collectors.toList())
-        .size() != 0;
+        .anyMatch(target -> target.equals(granule));
     }
 
     public boolean hasPendingOn(DBGranule granule){
         this.assertParamsAreNotNull(granule);
 
-        return this.pending.stream()
+        return this.pendingLocks().stream()
         .anyMatch(wait -> wait.getTarget().equals(granule));
     }
+
+    public boolean canProcessAction(DBLockList.Lock lock, int index) {
+        String source = lock.getSource();
+        return this.pendingLocks().stream()
+        .noneMatch(dblock -> source.equals(dblock.getSource()))
+        || this.pending.stream()
+            .filter(action -> action.getSource().equals(source))
+            .map(action -> action.index)
+            .min(Integer::compareTo).orElse(-1) == index;
+    }
+
+    public List<DBTransactionAction> getPendings() { return pending; }
 
     public List<E_DBLockTypes> getLockTypesOn(DBGranule granule){
         this.assertParamsAreNotNull(granule);
@@ -117,33 +158,72 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         .collect(Collectors.toList());
     }
 
+    public DBLockList.Lock getLockOn(DBGranule granule, String source){
+      return this.stream()
+      .filter(lock -> lock.getSource().equals(source))
+      .filter(lock -> lock.getTarget().equals(granule))
+      .findFirst()
+      .orElse(new DBLockList.Lock("", null, E_DBLockTypes.NONE));
+    }
+
     public List<DBLockList.Lock> getPendingLocksOn(DBGranule granule){
         this.assertParamsAreNotNull(granule);
 
+        return this.getPendingActionsOn(granule).stream()
+        .map(DBLockList.Lock::new)
+        .collect(Collectors.toList());
+    }
+
+    public List<DBTransactionAction> getPendingActionsOn(DBGranule granule){
+        this.assertParamsAreNotNull(granule);
         return this.pending.stream()
         .filter(lock -> lock.getTarget().equals(granule))
         .collect(Collectors.toList());
     }
 
-    public boolean add(DBLockList.Lock lock){
-        this.assertParamsAreNotNull(lock);
-
+    public boolean add(DBTransactionAction action){
+        this.assertParamsAreNotNull(action);
+        DBLockList.Lock lock = new DBLockList.Lock(action);
         DBGranule target = lock.getTarget();
+        DBLockList.Lock existingLock = this.getLockOn(target, lock.getSource());
+
+        if(!lock.stricterThan(existingLock))
+            return true;
+
         if(this.hasLockOn(target)){
             List<E_DBLockTypes> lockTypes = this.getLockTypesOn(target);
             boolean incompatible = lockTypes.stream()
-            .filter(lockType -> lock.getType().compatibleWith(lockType))
-            .collect(Collectors.toList())
-            .isEmpty();
+            .anyMatch(lockType -> !lock.getType().compatibleWith(lockType));
 
-            if(!incompatible)
-                return this.pending.add(lock);
+            if(incompatible){
+                this.addPending(action);
+                return false;
+            }
         }
-        return super.add(lock);
+        if(!existingLock.getType().equals(E_DBLockTypes.NONE))
+            this.remove(existingLock);
+
+        super.add(lock);
+        this.trigger(DBLockList.ADD_LOCK, lock);
+        return true;
+    }
+
+    public boolean addPending(DBTransactionAction action){
+        boolean ret = this.pending.add(action);
+        this.trigger(DBLockList.ADD_PENDING, action);
+        return ret;
+    }
+
+    public boolean removePending(DBTransactionAction action){
+        boolean ret = this.pending.remove(action);
+        this.trigger(DBLockList.RM_PENDING, action);
+        return ret;
     }
 
     public boolean remove(DBLockList.Lock lock){
         this.assertParamsAreNotNull(lock);
+//        if(lock.getType().isExclusive())
+//            throw new RuntimeException("Ouch :@ !");
 
         if(!this.contains(lock))
             return false;
@@ -151,21 +231,55 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         //this.assertParamsAreNotNull(lock);
 
         super.remove(lock);
-        if(this.hasPendingOn(lock.getTarget())){
-            this.getPendingLocksOn(lock.getTarget()).stream()
-            .filter(pending -> !pending.getType().compatibleWith(lock.getType()))
-            .forEach(this::add);
-
-            //This will select the pending locks which were not compatible with the
-            //lock that we're removing (means that the removed one was blocking)
-            //and add those only to the execution queue
-        }
+        this.trigger(DBLockList.RM_LOCK, lock);
+        //this.executePendings(lock);
         return true;//TMP
 
         //TODO: Fin de l'implémentation ;  si il y a des transactions en attente, les mettre dans la "file" d'exécution "in-place"
         //Done ?
     }
 
+    public boolean removeAll(DBLockList.Lock lock){
+      List<DBLockList.Lock> toRemove = this.stream()
+      .filter(dblock -> dblock.getSource().equals(lock.getSource()))
+      .collect(Collectors.toList());
+
+      boolean ret  = toRemove.stream()
+      .map(this::remove)
+      .reduce(true, Boolean::logicalAnd);
+
+      this.executePendings();
+
+      return ret;
+    }
+
+    public DBLockList executePendings(DBLockList.Lock lock){
+      if(this.hasPendingOn(lock.getTarget())){
+          this.getPendingActionsOn(lock.getTarget())
+          .forEach(execution::execute);
+
+          //This will select the pending locks which were not compatible with the
+          //lock that we're removing (means that the removed one was blocking)
+          //and add those only to the execution queue
+      }
+
+      return this;
+    }
+
+    public DBLockList executePendings(){
+        List<DBTransactionAction> pendingCopy = new ArrayList<>(this.pending);
+        List<DBTransactionAction> toRemove = pendingCopy.stream()
+        .map(execution::executeAction)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+        toRemove.forEach(this::removePending); //trigger event
+        return this;
+    }
+
+    @Override
+    public Map<String, List<I_Observer>> getObservers() {
+        return this.observers;
+    }
 
     @Override
     public String stringify(String tabLevel) {
@@ -189,4 +303,9 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
 
         return ret;
     }
+
+    public final static String ADD_LOCK = "DBLockList@add";
+    public final static String RM_LOCK = "DBLockList@remove";
+    public final static String ADD_PENDING = "DBLockList@add.pending";
+    public final static String RM_PENDING = "DBLockList@remove.pending";
 }
