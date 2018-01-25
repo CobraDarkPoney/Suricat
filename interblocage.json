@@ -1,0 +1,61 @@
+{
+  "models": [
+    {
+      "name": "R1",
+      "attributes": [
+        {
+          "name": "R1.A",
+          "dbtype": "VARCHAR"
+        },
+        {
+          "name": "R1.B",
+          "dbtype": "SMALLINT"
+        }
+      ]
+    },
+    {
+      "name": "R2",
+      "attributes": [
+        {
+          "name": "R2.A",
+          "dbtype": "VARCHAR"
+        },
+        {
+          "name": "R2.B",
+          "dbtype": "SMALLINT"
+        }
+      ]
+    }
+  ],
+
+  "transactions": [
+    {
+      "source": "t1",
+      "index": 1,
+      "lock": "XE",
+      "type": "find",
+      "target": "R1"
+    },
+    {
+      "source": "t2",
+      "index": 2,
+      "lock": "XE",
+      "type": "find",
+      "target": "R2"
+    },
+    {
+      "source": "t1",
+      "index": 3,
+      "lock": "U",
+      "type": "find",
+      "target": "R2"
+    },
+    {
+      "source": "t2",
+      "index": 4,
+      "lock": "SE",
+      "type": "find",
+      "target": "R1"
+    }
+  ]
+}
