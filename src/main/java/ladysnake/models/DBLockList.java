@@ -204,7 +204,7 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
             this.remove(existingLock);
 
         super.add(lock);
-        this.trigger(DBLockList.ADD_LOCK, lock);
+        this.trigger(DBLockList.ADD_LOCK, lock, action.getActionType().getName());
         return true;
     }
 
@@ -274,6 +274,8 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         .collect(Collectors.toList());
         toRemove.forEach(this::removePending); //trigger event
         return this;
+
+        //ajouté avant d'être retiré de la liste d'attente, problématique ?
     }
 
     @Override

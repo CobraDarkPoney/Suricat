@@ -87,6 +87,8 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
 
     public E_DBTransactionActionTypes getType() { return type; }
 
+    public E_DBLockTypes getLock() { return lock; }
+
     public DBTransactionAction setLock(E_DBLockTypes type) {
       this.assertParamsAreNotNull(type);
       this.lock = type;
