@@ -1,7 +1,9 @@
 package ladysnake;
 
+import ladysnake.helpers.events.I_Observer;
 import ladysnake.helpers.utils.I_Stringify;
 import ladysnake.models.DBLockList;
+import ladysnake.models.DBTransaction;
 import ladysnake.models.DBTransactionExecution;
 import ladysnake.models.ModelsManager;
 
@@ -20,7 +22,11 @@ public class TextApp {
         .on(DBLockList.RM_PENDING, TextApp::eventHandler);
 
         this.mm.getExecution()
-        .on(DBTransactionExecution.STOP, (eventName, args) -> displayEventName(eventName));
+        .on(DBTransactionExecution.INDEX, (eventName, args) -> {
+                displayEventName(eventName);
+                String index = args[0].toString();
+                out("Current index: " + index);
+        }).on(DBTransactionExecution.STOP, (eventName, args) -> displayEventName(eventName));
     }
 
     public static void out(Object o){ System.out.println(o); }

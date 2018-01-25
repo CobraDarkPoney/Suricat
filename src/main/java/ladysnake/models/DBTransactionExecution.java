@@ -15,6 +15,9 @@ public class DBTransactionExecution extends A_Observable{
         this.isRunning = false;
         this.transaction = t;
         this.lockList = new DBLockList(this);
+
+        this.registerEvent(STOP);
+        this.registerEvent(INDEX);
     }
 
     public DBTransactionExecution run(){
@@ -34,7 +37,7 @@ public class DBTransactionExecution extends A_Observable{
     public void execute(DBTransactionAction action){ this.executeAction(action); }
 
     public DBTransactionAction executeAction(DBTransactionAction action) {
-        System.out.println(action.index);
+        this.trigger(DBTransactionExecution.INDEX, action.index);
         if(!this.isRunning)
             return null;
 
@@ -109,4 +112,5 @@ public class DBTransactionExecution extends A_Observable{
     }
 
     public static final String STOP = "DBTransactionExecution@stop";
+    public static final String INDEX = "DBTransactionExecution@index";
 }
