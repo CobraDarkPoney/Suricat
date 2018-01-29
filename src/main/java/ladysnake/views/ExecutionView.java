@@ -1,5 +1,7 @@
 package ladysnake.views;
 
+import ladysnake.helpers.utils.Range;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -51,14 +53,12 @@ public class ExecutionView extends A_View{
     protected ViewPanel getTransactionPanel(){
         ViewPanel p = new ViewPanel();
         p.setLayout(new GridLayout(1,1));
-        p.addComponent("scrollPane", new JScrollPane())
-        .getTaggedComponent("scrollPane")
-        .getRawComponent()
-        .setLayout(this.getNewBothScrollingLayout());
+        ViewPanel innerPanel = new ViewPanel();
+        for(char c : Range.make('a', 'z'))
+            innerPanel.addComponent(TRANSACTION_PANEL + "_" + c, new JButton(TRANSACTION_PANEL+ "_" + c));
 
-        JScrollPane pane = p.getComponentAs("scrollPane");
-        for(char character='a' ; character < 'z' ; character+=1)
-            pane.add(new JButton(TRANSACTION_PANEL));
+        final String SCROLLPANE = "scroll";
+        p.addComponent(SCROLLPANE, new JScrollPane(innerPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 
         return p;
     }

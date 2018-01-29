@@ -45,6 +45,7 @@ public class HomeView extends A_View{
         ViewPanel rhsPanel = new ViewPanel();
         rhsPanel.setLayout(new GridLayout(RHS_ROWS, RHS_COLS, RHS_SPACING, RHS_SPACING));
         rhsPanel.addComponent("btn", new JButton("Go Transaction"));
+        rhsPanel.addComponent(FILE_CHOOSER_BTN, new JButton("Choisir un fichier JSON"));
         return rhsPanel;
     }
 
@@ -59,6 +60,7 @@ public class HomeView extends A_View{
 
     public final static String LOGO_PANEL = "logo";
     public final static String RHS_PANEL = "rhs";
+    public final static String FILE_CHOOSER_BTN = "filechooserbtn";
 
     public final static int RHS_ROWS = 2;
     public final static int RHS_COLS = 1;
