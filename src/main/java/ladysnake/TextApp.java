@@ -3,6 +3,7 @@ package ladysnake;
 import ladysnake.helpers.events.I_Observer;
 import ladysnake.helpers.utils.I_Stringify;
 import ladysnake.models.*;
+import ladysnake.views.ViewsManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,6 +43,8 @@ public class TextApp {
                 //out("");
         }).on(DBTransactionExecution.STOP, (eventName, args) -> displayEventName(eventName));
     }
+
+    public ModelsManager getModelsManager() { return mm; }
 
     public static void out(Object o){ System.out.println(o); }
     public static void displayEventName(String eventName){ out("> Évènement déclenché : " + getEventDescription(eventName)); }
@@ -116,8 +119,8 @@ public class TextApp {
 
         final String fileURI = args[0];
         TextApp app = new TextApp(fileURI);
-        app.mm.getExecution().run();
-        final int pendingsLeft = app.mm.getLockList().getPendings().size();
+        app.getModelsManager().getExecution().run();
+        final int pendingsLeft = app.getModelsManager().getLockList().getPendings().size();
 
         if(pendingsLeft > 0)
             out("Blocage !!");
