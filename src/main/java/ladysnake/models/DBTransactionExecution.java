@@ -25,7 +25,7 @@ public class DBTransactionExecution extends A_Observable{
             return this;
 
         this.isRunning = true;
-        List<DBTransactionAction> actions = this.transaction.actions;
+        List<DBTransactionAction> actions = this.transaction.getActions();
         actions.forEach(this::execute);
         this.stop();
 
