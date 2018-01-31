@@ -196,7 +196,7 @@ public class ViewWindow extends JFrame implements I_MightNoNullParams, I_TaggedC
      * @return this {@link ViewWindow}
      */
     public ViewWindow setMenubar(JMenuBar menubar){
-        this.assertParamsAreNotNull(menubar);
+        //this.assertParamsAreNotNull(menubar);
 
         super.setJMenuBar(menubar);
         return this;

@@ -14,13 +14,16 @@ public abstract class A_Controller implements I_MightNoNullParams{
     ////////////////////////////////////////////////////////////////////////////////////////////
     protected A_View view;
 
+    protected ControllersManager controllersManager;
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-    public A_Controller(A_View view){
-        this.assertParamsAreNotNull(view);
+    public A_Controller(A_View view, ControllersManager cm){
+        this.assertParamsAreNotNull(view, cm);
 
         this.view = view;
+        this.controllersManager = cm;
         this.addListeners();
     }
 
@@ -30,9 +33,11 @@ public abstract class A_Controller implements I_MightNoNullParams{
     /**Retrieves the {@link ViewsManager} tied to the {@link A_View} of this {@link A_Controller}
      * @return {@link ViewsManager}
      */
-    public final ViewsManager getManager(){
+    public final ViewsManager getViewsManager(){
         return this.view.getManager();
     }
+
+    public final ControllersManager getControllersManager(){ return this.controllersManager; }
 
     public abstract void addListeners();
 }

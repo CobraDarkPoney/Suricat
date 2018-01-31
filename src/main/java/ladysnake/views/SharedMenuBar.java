@@ -54,6 +54,8 @@ public class SharedMenuBar {
         return instance;
     }
 
+    public static MenuBarBuilder getBuilder(){ return SharedMenuBar.getInstance().builder; }
+
     /**Retrieve the {@link JMenuBar} associated to the only instance of {@link SharedMenuBar}
      * @return the only {@link JMenuBar}
      */
@@ -61,10 +63,10 @@ public class SharedMenuBar {
         return getInstance().getJMenuBar();
     }
 
-    public final static String FILE = "File";
-    public final static String FILE_IMPORT = "Import JSON file ...";
+    public final static String FILE = "Fichier";
+    public final static String FILE_IMPORT = "Importer un fichier JSON ...";
     public final static Map<String, String> ACCESSIBLE_DESCRIPTION = new HashMap<String, String>(){{
-        put(FILE, "Menu related to the use of files");
-        put(FILE_IMPORT, "Import a file to be used");
+        put(FILE, "Menu concernant l'utilisation de fihiers");
+        put(FILE_IMPORT, "Importer un fichier afin de l'utiliser");
     }};
 }

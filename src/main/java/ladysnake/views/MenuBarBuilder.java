@@ -178,7 +178,7 @@ public class MenuBarBuilder implements I_MightNoNullParams{
      * @return NULL if not found, otherwise the {@link JMenu}
      */
     @Nullable
-    protected JMenu getMenu(String menuID){
+    public JMenu getMenu(String menuID){
         this.assertParamsAreNotNull(menuID);
 
         int index = this.getIndexForMenu(menuID);
@@ -216,7 +216,7 @@ public class MenuBarBuilder implements I_MightNoNullParams{
      * @return NULL if not found, the {@link JMenuItem} otherwise
      */
     @Nullable
-    protected JMenuItem getMenuItemFromMenu(String menuID, String menuItemID){
+    public JMenuItem getMenuItemFromMenu(String menuID, String menuItemID){
         this.assertParamsAreNotNull(menuID, menuItemID);
 
         int index = this.getIndexForMenuItemInMenu(menuID, menuItemID);
@@ -224,7 +224,7 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         if(index < 0)
             return null;
 
-        JMenu menu = this.getMenu(menuItemID);
+        JMenu menu = this.getMenu(menuID);
         if(menu == null)
             return null;
 

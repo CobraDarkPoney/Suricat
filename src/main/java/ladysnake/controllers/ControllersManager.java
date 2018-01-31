@@ -8,9 +8,9 @@ import java.util.Map;
 
 @SuppressWarnings({"unchecked", "unused", "WeakerAccess", "SpellCheckingInspection"})
 public class ControllersManager {
-    Map<String, A_Controller> controllers;
-    ViewsManager vm;
-    ModelsManager modelsManager;
+    protected Map<String, A_Controller> controllers;
+    protected ViewsManager vm;
+    protected ModelsManager modelsManager;
 
     public ControllersManager(ViewsManager vm, ModelsManager mm){
         this.controllers = new HashMap<>();
@@ -30,4 +30,13 @@ public class ControllersManager {
     public boolean hasController(String name){ return this.controllers.containsKey(name); }
 
     public A_Controller getController(String name){ return this.controllers.get(name); }
+
+    public ViewsManager getViewsManager(){ return this.vm; }
+
+    public ModelsManager getModelsManager() { return modelsManager; }
+
+    public ControllersManager setModelsManager(ModelsManager manager){
+        this.modelsManager = manager;
+        return this;
+    }
 }

@@ -21,10 +21,10 @@ public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-    public App() throws IOException {
+    public App(){
         this.vm = new ViewsManager(App.TITLE, App.DIMENSION);
         this.vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.mm = ModelsManager.fromFile("test.json");
+        this.mm = null;
         this.cm = new ControllersManager(this.vm, this.mm);
         A_View executionView = new ExecutionView(this.vm);
         A_View homeView = new HomeView(this.vm);
@@ -34,8 +34,8 @@ public class App {
         .addView(App.HOME_VIEW_TAG, homeView)
         .setCurrentView(App.EXECUTION_VIEW_TAG); //Not necessary -> default behavior
 
-        this.cm.addController(App.EXECUTION_VIEW_TAG, new ExecutionController(executionView))
-        .addController(App.HOME_VIEW_TAG, new HomeController(homeView));
+        this.cm.addController(App.EXECUTION_VIEW_TAG, new ExecutionController(executionView, this.cm))
+        .addController(App.HOME_VIEW_TAG, new HomeController(homeView, this.cm));
 
         try {
             vm.setLookAndFeel(LookAndFeelHub.NIMBUS);
