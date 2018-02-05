@@ -21,7 +21,7 @@ public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-    public App(){
+    public App() throws IOException {
         this.vm = new ViewsManager(App.TITLE, App.DIMENSION);
         this.vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.mm = null;

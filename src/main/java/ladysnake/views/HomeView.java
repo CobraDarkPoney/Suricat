@@ -1,14 +1,18 @@
 package ladysnake.views;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class HomeView extends A_View{
     /**
      * @see A_View#A_View(ViewsManager)
      */
-    public HomeView(ViewsManager manager) {
+    public HomeView(ViewsManager manager) throws IOException {
         super(manager);
     }
 
@@ -19,7 +23,7 @@ public class HomeView extends A_View{
      * @see A_View#setUp()
      */
     @Override
-    protected ViewPanel setUp() {
+    protected ViewPanel setUp() throws IOException {
         ViewPanel panel = new ViewPanel();
         panel.setLayout(new GridLayout(GRID_ROWS, GRID_COLS, GRID_SPACING, GRID_SPACING));
         panel.addComponent(LOGO_PANEL, this.getLogoPanel())
@@ -35,8 +39,43 @@ public class HomeView extends A_View{
         return "home";
     }
 
-    protected ViewPanel getLogoPanel(){
-        ViewPanel logoPanel = new ViewPanel();
+    protected ViewPanel getLogoPanel() throws IOException {
+        BufferedImage logo = ImageIO.read(new File(LOGO_URL));
+        ViewPanel logoPanel = new ViewPanel(){
+            protected Image bg = logo;
+
+            @Override
+            public void paintComponent(Graphics g){
+                super.paintComponent(g);
+                int width = bg.getWidth(null), height = bg.getHeight(null);
+                int selfWidth = getWidth(), selfHeight = getHeight();
+                int aspectRatio, selfAspectRatio;
+                try{
+                    aspectRatio = width / height;
+                    selfAspectRatio = selfWidth / selfHeight;
+                }catch(ArithmeticException e){
+                    e.printStackTrace();
+                    System.exit(-1);
+                    return;
+                }
+
+                if(width > selfWidth){
+                    width = selfWidth;
+                    height = width / aspectRatio;
+                }
+
+                if(height > selfHeight){
+                    height = selfHeight;
+                    width = aspectRatio * height;
+                }
+
+                int dx = selfWidth - width;
+                int dy = selfHeight - height;
+                Image reScaled = bg.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+                g.drawImage(reScaled, dx/2, dy/2, width, height, this);
+            }
+        };
         logoPanel.setLayout(new GridLayout(LOGO_ROWS, LOGO_COLS, LOGO_SPACING, LOGO_SPACING));
         return logoPanel;
     }
@@ -69,4 +108,6 @@ public class HomeView extends A_View{
     public final static int LOGO_ROWS = 1;
     public final static int LOGO_COLS = 1;
     public final static int LOGO_SPACING = GRID_SPACING;
+
+    public final static String LOGO_URL = "logo-smooth.png";
 }

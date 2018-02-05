@@ -4,6 +4,7 @@ import com.sun.istack.internal.Nullable;
 import ladysnake.helpers.utils.I_MightNoNullParams;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.Objects;
 
 /**An abstract class factorizing the shared behavior of all views
@@ -22,7 +23,7 @@ public abstract class A_View implements I_MightNoNullParams{
     ////////////////////////////////////////////////////////////////////////////////////////////
     /**Constructor (initializes the fields using the overridden methods)
      */
-    public A_View(ViewsManager manager){
+    public A_View(ViewsManager manager) throws IOException {
         this.assertParamsAreNotNull(manager);
 
         this.viewPanel = this.setUp();
@@ -72,7 +73,7 @@ public abstract class A_View implements I_MightNoNullParams{
     /**Setup this {@link A_View}'s {@link ViewPanel}
      * @return A prepared {@link ViewPanel}
      */
-    protected abstract ViewPanel setUp();
+    protected abstract ViewPanel setUp() throws IOException;
 
     /**Retrieves this {@link A_View}'s title
      * @return the title of this view (for the window's bar) as a {@link String}

@@ -151,9 +151,9 @@ public class ViewPanel extends JPanel implements I_MightNoNullParams, I_TaggedCo
         this.assertParamsAreNotNull(tag);
 
         return this.components.stream()
-                .filter(component -> component.getTag().equals(tag))
-                .findFirst()
-                .orElse(null);
+        .filter(component -> component.getTag().equals(tag))
+        .findFirst()
+        .orElse(null);
     }
 
     /**

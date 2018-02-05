@@ -4,6 +4,7 @@ import ladysnake.helpers.utils.Range;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 /**An {@link A_View} dedicated to the execution of the transactions
  */
@@ -12,7 +13,7 @@ public class ExecutionView extends A_View{
     /**
      * @see A_View#A_View(ViewsManager)
      */
-    public ExecutionView(ViewsManager manager) {
+    public ExecutionView(ViewsManager manager) throws IOException {
         super(manager);
     }
 
