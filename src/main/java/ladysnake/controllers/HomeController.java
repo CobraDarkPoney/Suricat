@@ -54,11 +54,15 @@ public class HomeController extends A_Controller{
 
         view
                 .<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
-                .<JButton>getComponentAs("btn")
+                .<ViewPanel>getComponentAs(HomeView.TEXT_PANEL)
                 .addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        manager.switchTo(App.EXECUTION_VIEW_TAG);
+                        try {
+                            manager.switchTo(App.EXECUTION_VIEW_TAG);
+                        } catch (UnsupportedLookAndFeelException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 });
     }
@@ -68,12 +72,16 @@ public class HomeController extends A_Controller{
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                that.fileChooserLogic();
+                try {
+                    that.fileChooserLogic();
+                } catch (UnsupportedLookAndFeelException e1) {
+                    e1.printStackTrace();
+                }
             }
         };
     }
 
-    private void fileChooserLogic(){
+    private void fileChooserLogic() throws UnsupportedLookAndFeelException {
         System.out.println("click click modafucka");
         if(!this.fileChooserOpen) {
             this.fileChooserOpen = true;
@@ -103,12 +111,16 @@ public class HomeController extends A_Controller{
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                that.fileChooserLogic();
+                try {
+                    that.fileChooserLogic();
+                } catch (UnsupportedLookAndFeelException e1) {
+                    e1.printStackTrace();
+                }
             }
         };
     }
 
-    protected void goExecution(File selectedFile) throws IOException {
+    protected void goExecution(File selectedFile) throws IOException, UnsupportedLookAndFeelException {
         String path = selectedFile.getAbsolutePath();
         this.getControllersManager().setModelsManager(ModelsManager.fromFile(path));
         this.attachLockListListeners();

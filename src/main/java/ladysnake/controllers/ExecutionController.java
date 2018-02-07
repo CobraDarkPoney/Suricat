@@ -51,7 +51,12 @@ public class ExecutionController extends A_Controller {
         .addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                manager.switchTo(App.HOME_VIEW_TAG);
+                try {
+                    manager.switchTo(App.HOME_VIEW_TAG);
+                } catch (UnsupportedLookAndFeelException e1) {
+                    System.out.println("Could not update LookAndFeel");
+                    e1.printStackTrace();
+                }
             }
         });
     }

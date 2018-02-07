@@ -3,6 +3,7 @@ package ladysnake.views;
 import com.sun.istack.internal.Nullable;
 import ladysnake.helpers.utils.I_MightNoNullParams;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,8 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
     protected Map<String, A_View> views;
     protected A_View currentView;
     protected String currentViewTag;
+
+    protected LookAndFeelHub lookAndFeel;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
@@ -57,6 +60,7 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
         this.currentView = null;
         this.currentViewTag = null;
         this.setLayout(new GridLayout(1, 1));
+        this.lookAndFeel = null;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +71,7 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
      * @param view being the {@link A_View} to add
      * @return this {@link ViewsManager}
      */
-    public ViewsManager addView(String tag, A_View view){
+    public ViewsManager addView(String tag, A_View view) throws UnsupportedLookAndFeelException {
         this.assertParamsAreNotNull(tag, view);
         this.views.put(tag, view);
 
@@ -127,6 +131,18 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
         return this;
     }
 
+    public ViewsManager setLookAndFeel(LookAndFeelHub laf) throws UnsupportedLookAndFeelException {
+        this.assertParamsAreNotNull(laf);
+        this.lookAndFeel = laf;
+        return this.updateLookAndFeel();
+    }
+
+    public ViewsManager updateLookAndFeel() throws UnsupportedLookAndFeelException {
+        if(Objects.nonNull(this.lookAndFeel))
+        super.setLookAndFeel(this.lookAndFeel);
+        return this;
+    }
+
     /**Retrieves the current/active view
      * @return NULL if there's no current/active view, the {@link A_View} otherwise
      */
@@ -156,7 +172,7 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
      * @return this {@link ViewsManager}
      * @throws IllegalArgumentException if there's no {@link A_View} associated to the given tag
      */
-    public ViewsManager setCurrentView(String tag) throws IllegalArgumentException{
+    public ViewsManager setCurrentView(String tag) throws IllegalArgumentException, UnsupportedLookAndFeelException {
         this.assertParamsAreNotNull(tag);
         if(!this.views.containsKey(tag))
             throw new IllegalArgumentException("No such view available (requested: "+ tag + ")");
@@ -168,10 +184,11 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
             .replaceTitle(view.getViewTitle());
 
             //if(!Objects.isNull(view.getViewMenuBar()))
-                this.setMenubar(view.getViewMenuBar());
+            this.setMenubar(view.getViewMenuBar());
 
             this.currentView = view;
             this.currentViewTag = tag;
+            this.updateLookAndFeel();
         }
 
         return this;
@@ -201,7 +218,7 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
      * @param toTag being the tag associated to the {@link A_View} that shall become the active/current view
      * @return this {@link ViewsManager}
      */
-    public ViewsManager switchTo(String toTag){
+    public ViewsManager switchTo(String toTag) throws UnsupportedLookAndFeelException {
         this.assertParamsAreNotNull(toTag);
         if(!this.hasView(toTag))
             throw new IllegalArgumentException("There is no such view available (requested: " + toTag + ")");
