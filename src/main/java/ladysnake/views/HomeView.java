@@ -5,6 +5,9 @@ import ladysnake.App;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -89,27 +92,42 @@ public class HomeView extends A_View{
     protected ViewPanel getRhsPanel() throws IOException, FontFormatException {
         ViewPanel rhsPanel = new ViewPanel();
         //rhsPanel.setLayout(new GridLayout(RHS_ROWS, RHS_COLS, RHS_SPACING, RHS_SPACING));
-        rhsPanel.setLayout(new BorderLayout());
-        rhsPanel.addComponent(TEXT_PANEL, new ViewPanel(), BorderLayout.CENTER)
-        .<ViewPanel>getComponentAs(TEXT_PANEL)
-        .addComponent(TITLE_LABEL, new JLabel(TITLE_CONTENT))
-        .addComponent(MESSAGE_LABEL, new JTextArea(MESSAGE_CONTENT));
-        rhsPanel.addComponent(FILE_CHOOSER_BTN, new JButton("Choisir un fichier JSON"), BorderLayout.SOUTH);
+        rhsPanel.setLayout(new GridLayout(RHS_ROWS, RHS_COLS));
+        JTextPane textPane = new JTextPane();
+        rhsPanel.addComponent(TEXT_PANEL, textPane);
+//        .<ViewPanel>getComponentAs(TEXT_PANEL)
+//        .setLayout(new BorderLayout());
 
-        ViewPanel text = rhsPanel.getComponentAs(TEXT_PANEL);
-        text.setLayout(new FlowLayout());
-        JLabel title = text.getComponentAs(TITLE_LABEL);
-        JTextArea message = text.getComponentAs(MESSAGE_LABEL);
-        message.setColumns(10);
+//        rhsPanel.<ViewPanel>getComponentAs(TEXT_PANEL)
+//        .addComponent(TITLE_LABEL, new JLabel(TITLE_CONTENT))
+//        .addComponent(MESSAGE_LABEL, new JLabel( MESSAGE_CONTENT ));
+        int pos = 0;
+        StyledDocument sDoc = textPane.getStyledDocument();
+        Style def = textPane.getStyle("default");
 
-        Font roboto = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_PATH)).deriveFont(TITLE_PT);
-        Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_MEDIUM_PATH)).deriveFont(MESSAGE_PT);
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        ge.registerFont(roboto);
-        ge.registerFont(robotoMedium);
+        try {
+            sDoc.insertString(pos, TITLE_CONTENT, def); pos+=TITLE_CONTENT.length();
+            sDoc.insertString(pos, MESSAGE_CONTENT, def);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
 
-        title.setFont(robotoMedium);
-        message.setFont(roboto);
+        rhsPanel.addComponent(FILE_CHOOSER_BTN, new JButton("Choisir un fichier JSON"));
+
+//        ViewPanel text = rhsPanel.getComponentAs(TEXT_PANEL);
+//        text.setLayout(new FlowLayout());
+//        JLabel title = text.getComponentAs(TITLE_LABEL);
+//        JLabel message = text.getComponentAs(MESSAGE_LABEL);
+//        message.setPreferredSize(message.getParent().getPreferredSize());
+
+//        Font roboto = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_PATH)).deriveFont(TITLE_PT);
+//        Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_MEDIUM_PATH)).deriveFont(MESSAGE_PT);
+//        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//        ge.registerFont(roboto);
+//        ge.registerFont(robotoMedium);
+//
+//        title.setFont(robotoMedium);
+//        message.setFont(roboto);
 
         return rhsPanel;
     }

@@ -54,7 +54,7 @@ public class HomeController extends A_Controller{
 
         view
                 .<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
-                .<ViewPanel>getComponentAs(HomeView.TEXT_PANEL)
+                .<JTextPane>getComponentAs(HomeView.TEXT_PANEL)
                 .addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
