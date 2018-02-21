@@ -25,6 +25,7 @@ public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     public App() throws IOException, UnsupportedLookAndFeelException {
         this.vm = new ViewsManager(App.TITLE, App.DIMENSION);
+        this.vm.setMinimumSize(App.MIN_DIMENSION);
         this.vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.vm.setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
 
@@ -61,9 +62,12 @@ public class App {
     ////Class properties
     ////////////////////////////////////////////////////////////////////////////////////////////
     public final static String TITLE = "Suricat";
-    public final static int INIT_WIDTH = 800;
-    public final static int INIT_HEIGHT = 500;
+    public final static int INIT_WIDTH = 900;
+    public final static int INIT_HEIGHT = 600;
+    public final static int MIN_WIDTH = 821;
+    public final static int MIN_HEIGHT = 511;
     public final static Dimension DIMENSION = new Dimension(INIT_WIDTH, INIT_HEIGHT);
+    public final static Dimension MIN_DIMENSION = new Dimension(MIN_WIDTH, MIN_HEIGHT);
 
     public final static String EXECUTION_VIEW_TAG = "execution";
     public final static String HOME_VIEW_TAG = "home";

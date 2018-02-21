@@ -36,7 +36,7 @@ public class ExecutionView extends A_View{
 
     @Override
     public String getViewTitle() {
-        return "Exécution";
+        return "Suricat - Exécution";
     }
 
     /**Retrieves the {@link ViewPanel} the constitutes this {@link A_View}'s right hand side panel

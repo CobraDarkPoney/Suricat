@@ -34,37 +34,19 @@ public class HomeController extends A_Controller{
     ////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void addListeners() {
-        this.addListenersToBtn(this.view.getViewPanel(), this.getViewsManager());
         this.addListenersToFileChooserButton(this.view.getViewPanel(), this.getViewsManager());
     }
 
     private void addListenersToFileChooserButton(ViewPanel viewPanel, ViewsManager manager) {
         this.assertParamsAreNotNull(viewPanel, manager);
         viewPanel.<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
+        .<ViewPanel>getComponentAs(HomeView.BUTTON_PANEL)
         .<JButton>getComponentAs(HomeView.FILE_CHOOSER_BTN)
         .addMouseListener(this.getFileChooserMouseListener());
 
         //TODO: Add listeners to SharedMenuBar
         SharedMenuBar.getBuilder().getMenuItemFromMenu(SharedMenuBar.FILE, SharedMenuBar.FILE_IMPORT)
         .addActionListener(this.getFileChooserActionListener());
-    }
-
-    protected void addListenersToBtn(ViewPanel view, ViewsManager manager){
-        this.assertParamsAreNotNull(view, manager);
-
-        view
-                .<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
-                .<JTextPane>getComponentAs(HomeView.TEXT_PANEL)
-                .addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        try {
-                            manager.switchTo(App.EXECUTION_VIEW_TAG);
-                        } catch (UnsupportedLookAndFeelException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                });
     }
 
     private ActionListener getFileChooserActionListener(){

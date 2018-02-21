@@ -1,13 +1,11 @@
 package ladysnake.views;
 
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import ladysnake.App;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyledDocument;
+import javax.swing.border.Border;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,7 +44,7 @@ public class HomeView extends A_View{
      */
     @Override
     public String getViewTitle() {
-        return "home";
+        return "Suricat - Accueil";
     }
 
     protected ViewPanel getLogoPanel() throws IOException {
@@ -93,43 +91,67 @@ public class HomeView extends A_View{
         ViewPanel rhsPanel = new ViewPanel();
         //rhsPanel.setLayout(new GridLayout(RHS_ROWS, RHS_COLS, RHS_SPACING, RHS_SPACING));
         rhsPanel.setLayout(new GridLayout(RHS_ROWS, RHS_COLS));
-        JTextPane textPane = new JTextPane();
-        rhsPanel.addComponent(TEXT_PANEL, textPane);
-//        .<ViewPanel>getComponentAs(TEXT_PANEL)
-//        .setLayout(new BorderLayout());
 
-//        rhsPanel.<ViewPanel>getComponentAs(TEXT_PANEL)
-//        .addComponent(TITLE_LABEL, new JLabel(TITLE_CONTENT))
-//        .addComponent(MESSAGE_LABEL, new JLabel( MESSAGE_CONTENT ));
-        int pos = 0;
-        StyledDocument sDoc = textPane.getStyledDocument();
-        Style def = textPane.getStyle("default");
+        ViewPanel textPanel = new ViewPanel();
+//        ViewPanel textHolder = new ViewPanel();
+        textPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth = 3;
+        constraints.weightx = 1.0;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+//        textHolder.addComponent(TEXT_PANEL, textPanel, constraints);
+//        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.setBorder(BorderFactory.createLineBorder(Color.CYAN, 12));
 
-        try {
-            sDoc.insertString(pos, TITLE_CONTENT, def); pos+=TITLE_CONTENT.length();
-            sDoc.insertString(pos, MESSAGE_CONTENT, def);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
+        Font roboto = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_PATH)).deriveFont(MESSAGE_PT);
+        Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_MEDIUM_PATH)).deriveFont(TITLE_PT);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        ge.registerFont(roboto);
+        ge.registerFont(robotoMedium);
 
-        rhsPanel.addComponent(FILE_CHOOSER_BTN, new JButton("Choisir un fichier JSON"));
+        JLabel titleLabel = new JLabel(wrapTitle(TITLE_CONTENT));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel.setFont(robotoMedium);
+        textPanel.addComponent(TITLE_LABEL, titleLabel, constraints);
 
-//        ViewPanel text = rhsPanel.getComponentAs(TEXT_PANEL);
-//        text.setLayout(new FlowLayout());
-//        JLabel title = text.getComponentAs(TITLE_LABEL);
-//        JLabel message = text.getComponentAs(MESSAGE_LABEL);
-//        message.setPreferredSize(message.getParent().getPreferredSize());
+        JLabel messageLabel = new JLabel(wrapInP(MESSAGE_CONTENT));
+        messageLabel.setHorizontalAlignment(JLabel.CENTER);
+        messageLabel.setFont(roboto);
+        constraints.gridy = 1;
+        textPanel.addComponent(MESSAGE_LABEL, messageLabel, constraints);
 
-//        Font roboto = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_PATH)).deriveFont(TITLE_PT);
-//        Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_MEDIUM_PATH)).deriveFont(MESSAGE_PT);
-//        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//        ge.registerFont(roboto);
-//        ge.registerFont(robotoMedium);
-//
-//        title.setFont(robotoMedium);
-//        message.setFont(roboto);
+//        rhsPanel.addComponent(TEXT_HOLDER, textHolder);
+        rhsPanel.addComponent(TEXT_PANEL, textPanel);
+
+        ViewPanel buttonPanel = new ViewPanel();
+        buttonPanel.setLayout(new GridBagLayout());
+        rhsPanel.addComponent(BUTTON_PANEL, buttonPanel);
+
+        buttonPanel.addComponent(FILE_CHOOSER_BTN, new JButton(FILE_CHOOSER_BUTTON_TEXT));
 
         return rhsPanel;
+    }
+
+    protected String wrapInHtmlTag(String tag, String ctx){
+        this.assertParamsAreNotNull(tag, ctx);
+        return "<html> <" + tag + ">" + ctx + "</" + tag+  "> </html>";
+    }
+
+    protected String wrapInP(String ctx){
+        this.assertParamsAreNotNull(ctx);
+        return this.wrapInHtmlTag("p", ctx);
+    }
+
+    protected String wrapInH1(String ctx){
+        this.assertParamsAreNotNull(ctx);
+        return this.wrapInHtmlTag("h1", ctx);
+    }
+
+    protected String wrapTitle(String ctx){
+        this.assertParamsAreNotNull(ctx);
+        return this.wrapInP("<font size=+8>" + ctx + "</font>");
     }
 
 
@@ -148,11 +170,11 @@ public class HomeView extends A_View{
 
     public final static String TITLE_LABEL = "title-label";
     public final static String TITLE_CONTENT = "Bienvenue dans Suricat !";
-    public final static float TITLE_PT = 16f;
+    public final static float TITLE_PT = 60f;
 
     public final static String MESSAGE_LABEL = "msg-label";
     public final static String MESSAGE_CONTENT = "Pour commencer la visualisation des transactions de votre base de données, veuillez sélectionner un fichier JSON de format valide les représentant, ou glisser-déposer ce dernier dans cette fenêtre";
-    public final static float MESSAGE_PT = 10f;
+    public final static float MESSAGE_PT = 18f;
 
     public final static int RHS_ROWS = 2;
     public final static int RHS_COLS = 1;
@@ -163,4 +185,9 @@ public class HomeView extends A_View{
     public final static int LOGO_SPACING = GRID_SPACING;
 
     public final static String LOGO_URL = "logo-smooth.png";
+
+    public final static String TEXT_HOLDER = "tholder";
+    public final static String BUTTON_PANEL_HOLDER = "bpholder";
+    public final static String BUTTON_PANEL = "btn-panel";
+    public final static String FILE_CHOOSER_BUTTON_TEXT = "Choisir un fichier JSON";
 }
