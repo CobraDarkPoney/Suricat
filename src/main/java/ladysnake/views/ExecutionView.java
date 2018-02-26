@@ -1,13 +1,8 @@
 package ladysnake.views;
 
-import com.mxgraph.canvas.mxBasicCanvas;
-import com.mxgraph.canvas.mxGraphics2DCanvas;
-import com.mxgraph.canvas.mxImageCanvas;
+
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.swing.mxGraphOutline;
-import com.mxgraph.view.mxCellState;
 import ladysnake.helpers.utils.Range;
-import ladysnake.models.PendingGraph;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +14,6 @@ import java.io.IOException;
 public class ExecutionView extends A_View{
     protected LockStack lockStack;
     protected PendingGraph pendingGraph;
-    protected mxGraphComponent graphComponent;
 
     /**
      * @see A_View#A_View(ViewsManager)
@@ -35,14 +29,6 @@ public class ExecutionView extends A_View{
     ////////////////////////////////////////////////////////////////////////////////////////////
     public LockStack getLockStack() {
         return this.lockStack;
-    }
-
-    public PendingGraph getPendingGraph() {
-        return pendingGraph;
-    }
-
-    public mxGraphComponent getGraphComponent(){
-        return graphComponent;
     }
 
     @Override
@@ -126,14 +112,19 @@ public class ExecutionView extends A_View{
     protected ViewPanel getPendingGraphPanel(){
         ViewPanel p =new ViewPanel();
         p.setLayout(new GridLayout());
+//        this.pendingGraph = new PendingGraph();
+//        VisualPendingGraph graph = new VisualPendingGraph(this.pendingGraph);
+//        this.graphComponent = new mxGraphComponent(graph);
+////        JScrollPane scrollPane = new JScrollPane(this.graphComponent, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        p.addComponent(PENDING_GRAPH, this.graphComponent);
         this.pendingGraph = new PendingGraph();
-        VisualPendingGraph graph = new VisualPendingGraph(this.pendingGraph);
-        this.graphComponent = new mxGraphComponent(graph);
-        mxGraphOutline graphOutline = new mxGraphOutline(this.graphComponent);
-        JScrollPane scrollPane = new JScrollPane(graphOutline, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        p.addComponent(PENDING_GRAPH, scrollPane);
-        scrollPane.add(graphComponent);
+        mxGraphComponent graphComponent = new mxGraphComponent(this.pendingGraph);
+        p.addComponent(PENDING_GRAPH, graphComponent);
         return p;
+    }
+
+    public PendingGraph getPendingGraph() {
+        return pendingGraph;
     }
 
     @Override

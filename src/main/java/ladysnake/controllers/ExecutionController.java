@@ -1,18 +1,9 @@
 package ladysnake.controllers;
 
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.swing.mxGraphOutline;
 import ladysnake.App;
-import ladysnake.helpers.events.I_Observable;
-import ladysnake.helpers.events.I_Observer;
 import ladysnake.models.DBLockList;
 import ladysnake.models.DBTransactionExecution;
-import ladysnake.models.PendingGraph;
 import ladysnake.views.*;
-
-import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class ExecutionController extends A_Controller{
