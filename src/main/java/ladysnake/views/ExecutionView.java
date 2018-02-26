@@ -1,6 +1,13 @@
 package ladysnake.views;
 
+import com.mxgraph.canvas.mxBasicCanvas;
+import com.mxgraph.canvas.mxGraphics2DCanvas;
+import com.mxgraph.canvas.mxImageCanvas;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.mxGraphOutline;
+import com.mxgraph.view.mxCellState;
 import ladysnake.helpers.utils.Range;
+import ladysnake.models.PendingGraph;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,18 +17,44 @@ import java.io.IOException;
  */
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class ExecutionView extends A_View{
+    protected LockStack lockStack;
+    protected PendingGraph pendingGraph;
+    protected mxGraphComponent graphComponent;
+
     /**
      * @see A_View#A_View(ViewsManager)
      */
-    public ExecutionView(ViewsManager manager) throws IOException {
+    public ExecutionView(ViewsManager manager) throws IOException, FontFormatException {
         super(manager);
+        if(this.getLockStack() == null)
+            this.lockStack = new LockStack();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
+    public LockStack getLockStack() {
+        return this.lockStack;
+    }
+
+    public PendingGraph getPendingGraph() {
+        return pendingGraph;
+    }
+
+    public mxGraphComponent getGraphComponent(){
+        return graphComponent;
+    }
+
     @Override
     protected ViewPanel setUp() {
+        if(this.getLockStack() == null) {
+            try {
+                this.lockStack = new LockStack();
+            } catch (IOException|FontFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
         ViewPanel panel = new ViewPanel();
         panel.setLayout(new GridLayout(GRID_ROWS, GRID_COLS, GRID_SPACING, GRID_SPACING));
         panel.addComponent(TRANSACTION_PANEL, this.getTransactionPanel())
@@ -77,7 +110,13 @@ public class ExecutionView extends A_View{
     protected ViewPanel getLockStackPanel(){
         ViewPanel p = new ViewPanel();
         p.setLayout(new GridLayout());
-        p.addComponent("rect", new JButton(LOCK_STACK_PANEL));
+//        p.addComponent(LOCK_STACK, lockStack);
+        ViewPanel innerPanel = new ViewPanel();
+        innerPanel.setLayout(new GridBagLayout());
+        innerPanel.addComponent(LOCK_STACK, this.getLockStack());
+        JScrollPane scrollPane = new JScrollPane(innerPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setViewportView(this.getLockStack());
+        p.addComponent(LOCK_STACK, scrollPane);
         return p;
     }
 
@@ -87,7 +126,13 @@ public class ExecutionView extends A_View{
     protected ViewPanel getPendingGraphPanel(){
         ViewPanel p =new ViewPanel();
         p.setLayout(new GridLayout());
-        p.addComponent("rect", new JButton(PENDING_GRAPH_PANEL));
+        this.pendingGraph = new PendingGraph();
+        VisualPendingGraph graph = new VisualPendingGraph(this.pendingGraph);
+        this.graphComponent = new mxGraphComponent(graph);
+        mxGraphOutline graphOutline = new mxGraphOutline(this.graphComponent);
+        JScrollPane scrollPane = new JScrollPane(graphOutline, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        p.addComponent(PENDING_GRAPH, scrollPane);
+        scrollPane.add(graphComponent);
         return p;
     }
 
@@ -108,4 +153,8 @@ public class ExecutionView extends A_View{
     public final static String RHS_PANEL = "rhs-panel";
     public final static String LOCK_STACK_PANEL = "Locks";
     public final static String PENDING_GRAPH_PANEL = "Pendings";
+    public final static String LOCK_STACK = "lock-stack";
+    public final static String LOCK_STACK_INNER = "stack-inner";
+
+    public final static String PENDING_GRAPH = "ExecutionController@pendingGraph";
 }

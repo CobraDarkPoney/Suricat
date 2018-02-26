@@ -39,10 +39,25 @@ public class HomeController extends A_Controller{
 
     private void addListenersToFileChooserButton(ViewPanel viewPanel, ViewsManager manager) {
         this.assertParamsAreNotNull(viewPanel, manager);
-        viewPanel.<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
+        JButton button = viewPanel.<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
         .<ViewPanel>getComponentAs(HomeView.BUTTON_PANEL)
-        .<JButton>getComponentAs(HomeView.FILE_CHOOSER_BTN)
-        .addMouseListener(this.getFileChooserMouseListener());
+        .<JButton>getComponentAs(HomeView.FILE_CHOOSER_BTN);
+        button.addMouseListener(this.getFileChooserMouseListener());
+        button.addKeyListener(new KeyAdapter() {
+            JButton b = button;
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    this.b.doClick();
+                    try {
+                        HomeController.this.fileChooserLogic();
+                    } catch (UnsupportedLookAndFeelException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
 
         //TODO: Add listeners to SharedMenuBar
         SharedMenuBar.getBuilder().getMenuItemFromMenu(SharedMenuBar.FILE, SharedMenuBar.FILE_IMPORT)
@@ -121,6 +136,12 @@ public class HomeController extends A_Controller{
             TextApp.out("Index: " + index);
             //out("");
         }).on(DBTransactionExecution.STOP, (eventName, args) -> TextApp.displayEventName(eventName));
+
+        ExecutionController executionController = ((ExecutionController) this.getControllersManager().getController(App.EXECUTION_VIEW_TAG));
+        ViewPanel view = executionController.view.getViewPanel();
+        ViewsManager viewsManager = executionController.getViewsManager();
+        executionController.addListenersToLockStackPanel(view, viewsManager);
+        executionController.addListenersToPendingPanel(view, viewsManager);
     }
 
     protected void attachLockListListeners(){

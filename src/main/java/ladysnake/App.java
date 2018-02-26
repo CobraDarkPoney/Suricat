@@ -23,7 +23,7 @@ public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-    public App() throws IOException, UnsupportedLookAndFeelException {
+    public App() throws IOException, UnsupportedLookAndFeelException, FontFormatException {
         this.vm = new ViewsManager(App.TITLE, App.DIMENSION);
         this.vm.setMinimumSize(App.MIN_DIMENSION);
         this.vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -45,6 +45,7 @@ public class App {
 
         try {
             vm.setLookAndFeel(LookAndFeelHub.NIMBUS);
+//            vm.setLookAndFeel(LookAndFeelHub.MATERIAL);
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
             out("Could not change the look and feel");
@@ -78,13 +79,13 @@ public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class methods
     ////////////////////////////////////////////////////////////////////////////////////////////
-    protected static App make() throws IOException, UnsupportedLookAndFeelException {
+    protected static App make() throws IOException, UnsupportedLookAndFeelException, FontFormatException {
         return new App();
     }
 
     protected static void out(Object msg){ System.out.println(msg); }
 
-    public static void main(String[] args) throws IOException, UnsupportedLookAndFeelException {
+    public static void main(String[] args) throws IOException, UnsupportedLookAndFeelException, FontFormatException {
         App.make().run();
     }
 }

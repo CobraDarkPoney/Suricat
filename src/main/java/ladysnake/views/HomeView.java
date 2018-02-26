@@ -103,7 +103,6 @@ public class HomeView extends A_View{
         constraints.gridy = 0;
 //        textHolder.addComponent(TEXT_PANEL, textPanel, constraints);
 //        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
-        textPanel.setBorder(BorderFactory.createLineBorder(Color.CYAN, 12));
 
         Font roboto = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_PATH)).deriveFont(MESSAGE_PT);
         Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_MEDIUM_PATH)).deriveFont(TITLE_PT);

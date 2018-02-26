@@ -1,7 +1,13 @@
 package ladysnake.controllers;
 
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.mxGraphOutline;
 import ladysnake.App;
+import ladysnake.helpers.events.I_Observable;
+import ladysnake.helpers.events.I_Observer;
+import ladysnake.models.DBLockList;
 import ladysnake.models.DBTransactionExecution;
+import ladysnake.models.PendingGraph;
 import ladysnake.views.*;
 
 import javax.swing.*;
@@ -9,18 +15,20 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
-public class ExecutionController extends A_Controller {
+public class ExecutionController extends A_Controller{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-    public ExecutionController(A_View view, ControllersManager cm) { super(view, cm); }
+    public ExecutionController(A_View view, ControllersManager cm) {
+        super(view, cm);
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
     protected DBTransactionExecution getExecution(){
         //TODO: Warning /!\ --> NullPointerException possible
-        return this.getControllersManager().getModelsManager().getExecution().run();
+        return this.getControllersManager().getModelsManager().getExecution(); //.run()
     }
 
     public ExecutionController startExecution(){
@@ -36,7 +44,19 @@ public class ExecutionController extends A_Controller {
 
     @Override
     public void addListeners() {
-        this.addListenersToPendingPanel(this.view.getViewPanel(), this.getViewsManager());
+//        this.addListenersToPendingPanel(this.view.getViewPanel(), this.getViewsManager());
+//        this.addListenersToLockStackPanel(this.view.getViewPanel(), this.getViewsManager());
+    }
+
+    protected void addListenersToLockStackPanel(ViewPanel view, ViewsManager manager){
+        this.assertParamsAreNotNull(view, manager);
+        LockStack lockStack = ((ExecutionView) manager.getView(App.EXECUTION_VIEW_TAG)).getLockStack();
+
+        this.getExecution().getLockList()
+        .on(DBLockList.ADD_LOCK, lockStack)
+        .on(DBLockList.RM_LOCK, lockStack)
+        .on(DBLockList.ADD_PENDING, lockStack)
+        .on(DBLockList.RM_PENDING, lockStack);
     }
 
     protected void addListenersToPendingPanel(ViewPanel view, ViewsManager manager){
@@ -46,18 +66,23 @@ public class ExecutionController extends A_Controller {
         .<ViewPanel>getComponentAs(ExecutionView.RHS_PANEL)
         .getComponentAs(ExecutionView.PENDING_GRAPH_PANEL);
 
-        pendingPanel
-        .<JButton>getComponentAs("rect")
-        .addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    manager.switchTo(App.HOME_VIEW_TAG);
-                } catch (UnsupportedLookAndFeelException e1) {
-                    System.out.println("Could not update LookAndFeel");
-                    e1.printStackTrace();
-                }
-            }
-        });
+//        pendingPanel
+//        .<JButton>getComponentAs("rect")
+//        .addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                try {
+//                    manager.switchTo(App.HOME_VIEW_TAG);
+//                } catch (UnsupportedLookAndFeelException e1) {
+//                    System.out.println("Could not update LookAndFeel");
+//                    e1.printStackTrace();
+//                }
+//            }
+//        });
+
+        ExecutionView executionView = ((ExecutionView) this.getViewsManager().getView(App.EXECUTION_VIEW_TAG));
+        executionView.getPendingGraph().setLockList( this.getExecution().getLockList() );
     }
+
+    public final static String SWITCH = "ExecutionController@switch";
 }
