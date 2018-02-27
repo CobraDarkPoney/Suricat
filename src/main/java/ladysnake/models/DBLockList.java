@@ -160,10 +160,37 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
 
     public DBLockList.Lock getLockOn(DBGranule granule, String source){
       return this.stream()
+//      .peek(e -> System.out.println(e.getSource()))
       .filter(lock -> lock.getSource().equals(source))
       .filter(lock -> lock.getTarget().equals(granule))
       .findFirst()
-      .orElse(new DBLockList.Lock("", null, E_DBLockTypes.NONE));
+      .orElse(ERROR__GET_LOCK_ON);
+    }
+
+    public String whoHasLockOn(DBGranule granule){
+        this.assertParamsAreNotNull(granule);
+        return this.stream()
+        .filter(lock -> lock.getTarget().equals(granule))
+        .map(DBLockList.Lock::getSource)
+        .findFirst()
+        .orElse(ERROR__WHO_HAS_LOCK_ON);
+    }
+
+    public String whoHasStrictestLockOn(DBGranule granule){
+        this.assertParamsAreNotNull(granule);
+        return this.stream()
+        .filter(lock -> lock.getTarget().equals(granule))
+        .sorted((lhs, rhs) ->{
+            if(lhs.stricterThan(rhs))
+                return -1;
+            else if(rhs.stricterThan(lhs))
+                return 1;
+            else
+                return 0;
+        }).map(DBLockList.Lock::getSource)
+        .findFirst()
+        .orElse(ERROR__WHO_HAS_STRICTEST_LOCK_ON);
+
     }
 
     public List<DBLockList.Lock> getPendingLocksOn(DBGranule granule){
@@ -310,4 +337,8 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
     public final static String RM_LOCK = "DBLockList@remove";
     public final static String ADD_PENDING = "DBLockList@add.pending";
     public final static String RM_PENDING = "DBLockList@remove.pending";
+
+    public final static String ERROR__WHO_HAS_LOCK_ON = "ERROR#DBLockList@whoHasLockOn";
+    public final static String ERROR__WHO_HAS_STRICTEST_LOCK_ON = "ERROR#DBLockList@whoHasStrictestLockOn";
+    public final static DBLockList.Lock ERROR__GET_LOCK_ON = new DBLockList.Lock("ERROR#DBLockList@getLockOn", null, E_DBLockTypes.NONE);
 }

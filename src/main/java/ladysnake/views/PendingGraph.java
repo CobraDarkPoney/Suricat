@@ -10,6 +10,7 @@ import ladysnake.models.DBTransactionAction;
 
 import java.util.*;
 
+@SuppressWarnings({"unchecked", "unused", "WeakerAccess", "SpellCheckingInspection"})
 public class PendingGraph extends mxGraph implements I_Observer{
     protected DBLockList lockList;
     protected Map<String, Object> vertices = new HashMap<>();
@@ -22,7 +23,7 @@ public class PendingGraph extends mxGraph implements I_Observer{
     public PendingGraph(){ setupRules(); }
 
     public void setupRules(){
-        super.allowLoops = true;
+        super.allowLoops = false;
         super.allowDanglingEdges = false;
 
         super.cellsBendable = false;
@@ -32,12 +33,16 @@ public class PendingGraph extends mxGraph implements I_Observer{
         super.cellsEditable = false;
 
         super.cellsMovable = true;
-        super.cellsResizable = true;
+        super.cellsResizable = false;
         super.multigraph = true;
 
-        super.edgeLabelsMovable = false;
-//        super.connectableEdges = false;
+//        super.edgeLabelsMovable = false;
+        super.connectableEdges = false;
         super.cloneInvalidEdges = false;
+
+        super.allowNegativeCoordinates = true;
+        super.enabled = true;
+        super.constrainChildren = true;
     }
 
     public DBLockList getLockList(){ return this.lockList; }
@@ -66,7 +71,8 @@ public class PendingGraph extends mxGraph implements I_Observer{
         String target = targetGranule.getName();
         String type = transactionAction.getLock().getName();
         String source = transactionAction.getSource();
-        String blocking = this.getLockList().getLockOn(targetGranule, source).getSource();
+//        String blocking = this.getLockList().getLockOn(targetGranule, source).getSource();
+        String blocking = this.getLockList().whoHasStrictestLockOn(targetGranule);
         String edge = PendingGraph.makeEdgeLabel(target, type);
         Object parent = getParent();
         Object sourceVertex=null, blockingVertex=null, insertedEdge=null;
@@ -76,13 +82,19 @@ public class PendingGraph extends mxGraph implements I_Observer{
             switch (eventName){
                 case DBLockList.ADD_PENDING:
                     if(!this.vertices.containsKey(source)) {
+                        System.out.println("Source doesn't exist !");
+                        System.out.println("Name: " + source);
+//                        sourceVertex = super.insertVertex(parent, null, source, POS, POS, DIM, DIM);
                         sourceVertex = super.insertVertex(parent, source, source, POS, POS, DIM, DIM);
                         this.vertices.put(source, sourceVertex);
                     }else
                         sourceVertex = this.vertices.get(source);
 
                     if(!this.vertices.containsKey(blocking)) {
+                        System.out.println("Blocking doesn't exist !");
+                        System.out.println("Name: " + blocking);
                         blockingVertex = super.insertVertex(parent, blocking, blocking, POS, POS, DIM, DIM);
+//                        blockingVertex = super.insertVertex(parent, null, blocking, POS, POS, DIM, DIM);
                         this.vertices.put(blocking, blockingVertex);
                     }else
                         blockingVertex = this.vertices.get(blocking);
@@ -95,11 +107,15 @@ public class PendingGraph extends mxGraph implements I_Observer{
 
                 case DBLockList.RM_PENDING:
                     List<Object> toRemove = new ArrayList<>();
-                    if(super.getOutgoingEdges(this.vertices.getOrDefault(source, null)).length == 0)
-                        toRemove.add(this.vertices.getOrDefault(source, null));
+                    Object vSource = this.vertices.getOrDefault(source, null);
+                    Object vBlocking;
 
-                    if(super.getIncomingEdges(this.vertices.getOrDefault(blocking, null)).length == 0)
-                        toRemove.add(this.vertices.getOrDefault(blocking, null));
+                    if(super.getOutgoingEdges(vSource).length == 0 && super.getIncomingEdges(vSource).length == 0)
+                        toRemove.add(vSource);
+
+                    vBlocking = this.vertices.getOrDefault(blocking, null);
+                    if(super.getOutgoingEdges(vBlocking).length == 0 && super.getIncomingEdges(vBlocking).length == 0)
+                        toRemove.add(vBlocking);
 
 
                     super.removeCells(toRemove.toArray(), true);
@@ -114,6 +130,7 @@ public class PendingGraph extends mxGraph implements I_Observer{
         layout.execute(getParent());
         super.refresh();
         super.repaint();
+        super.foldCells(true, true);
 
 //        switch (eventName){
 //            case DBLockList.ADD_PENDING:
