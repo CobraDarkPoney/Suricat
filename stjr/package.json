@@ -1,0 +1,14 @@
+{
+  "name": "srjg",
+  "version": "BETA1",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "author": "Romain JAOUEN",
+  "license": "ISC",
+  "dependencies": {
+    "readline-sync": "^1.4.9"
+  }
+}

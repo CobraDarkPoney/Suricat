@@ -1,0 +1,47 @@
+{
+    "models": [
+        {
+            "name": "R",
+            "attributes": [
+                {
+                    "name": "R.A",
+                    "dbtype": "VARCHAR"
+                },
+                {
+                    "name": "R.B",
+                    "dbtype": "SMALLINT"
+                }
+            ]
+        }
+    ],
+    "transactions": [
+        {
+            "source": "t1",
+            "index": 0,
+            "lock": "XE",
+            "type": "find",
+            "target": "R"
+        },
+        {
+            "source": "t2",
+            "index": 1,
+            "lock": "SE",
+            "type": "commit",
+            "target": "R"
+        },
+        {
+            "source": "t3",
+            "index": 1,
+            "lock": "SE",
+            "type": "update",
+            "target": "R"
+        },
+        {
+            "source": "t1",
+            "index": 1,
+            "lock": "SE",
+            "type": "find",
+            "target": "R"
+        }
+    ]
+}
