@@ -79,7 +79,7 @@ public class HomeController extends A_Controller{
     }
 
     private void fileChooserLogic() throws UnsupportedLookAndFeelException {
-        System.out.println("click click modafucka");
+//        System.out.println("click click modafucka");
         if(!this.fileChooserOpen) {
             this.fileChooserOpen = true;
             this.fileChooser = new JDialog();
@@ -129,27 +129,28 @@ public class HomeController extends A_Controller{
     }
 
     protected void attachExecutionListeners() {
-        this.getControllersManager().getModelsManager().getExecution()
-        .on(DBTransactionExecution.INDEX, (eventName, args) -> {
-            TextApp.displayEventName(eventName);
-            String index = args[0].toString();
-            TextApp.out("Index: " + index);
-            //out("");
-        }).on(DBTransactionExecution.STOP, (eventName, args) -> TextApp.displayEventName(eventName));
+//        this.getControllersManager().getModelsManager().getExecution()
+//        .on(DBTransactionExecution.INDEX, (eventName, args) -> {
+//            TextApp.displayEventName(eventName);
+//            String index = args[0].toString();
+//            TextApp.out("Index: " + index);
+//            //out("");
+//        }).on(DBTransactionExecution.STOP, (eventName, args) -> TextApp.displayEventName(eventName));
 
         ExecutionController executionController = ((ExecutionController) this.getControllersManager().getController(App.EXECUTION_VIEW_TAG));
         ViewPanel view = executionController.view.getViewPanel();
         ViewsManager viewsManager = executionController.getViewsManager();
         executionController.addListenersToLockStackPanel(view, viewsManager);
         executionController.addListenersToPendingPanel(view, viewsManager);
+        executionController.addListenersToTimelines();
     }
 
     protected void attachLockListListeners(){
-        this.getControllersManager().getModelsManager().getLockList()
-        .on(DBLockList.ADD_LOCK, TextApp::eventHandler)
-        .on(DBLockList.RM_LOCK, TextApp::eventHandler)
-        .on(DBLockList.ADD_PENDING, TextApp::eventHandler)
-        .on(DBLockList.RM_PENDING, TextApp::eventHandler);
+//        this.getControllersManager().getModelsManager().getLockList()
+//        .on(DBLockList.ADD_LOCK, TextApp::eventHandler)
+//        .on(DBLockList.RM_LOCK, TextApp::eventHandler)
+//        .on(DBLockList.ADD_PENDING, TextApp::eventHandler)
+//        .on(DBLockList.RM_PENDING, TextApp::eventHandler);
     }
 
     protected JFileChooser getFileChooser(){

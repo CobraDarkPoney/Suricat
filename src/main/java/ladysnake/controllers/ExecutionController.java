@@ -5,6 +5,10 @@ import ladysnake.models.DBLockList;
 import ladysnake.models.DBTransactionExecution;
 import ladysnake.views.*;
 
+import java.awt.*;
+import java.io.IOException;
+import java.util.List;
+
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class ExecutionController extends A_Controller{
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +77,21 @@ public class ExecutionController extends A_Controller{
 
         ExecutionView executionView = ((ExecutionView) this.getViewsManager().getView(App.EXECUTION_VIEW_TAG));
         executionView.getPendingGraph().setLockList( this.getExecution().getLockList() );
+
+//        executionView.setTimelineHub(timelineHub);
+    }
+
+    protected void addListenersToTimelines(){
+        ExecutionView executionView = ((ExecutionView) this.getViewsManager().getView(App.EXECUTION_VIEW_TAG));
+        TimelineHub timelineHub = executionView.getTimelineHub();
+        TimelineHub.EVENTS_HANDLED.forEach(eventName -> this.getExecution().on(eventName, timelineHub));
+        List<String> sources = this.getControllersManager().getModelsManager().getSources();
+        try {
+            for(String source : sources)
+                timelineHub.addTimelineFor(source);
+        } catch (FontFormatException|IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public final static String SWITCH = "ExecutionController@switch";

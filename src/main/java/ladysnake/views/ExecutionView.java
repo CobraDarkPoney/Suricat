@@ -14,6 +14,7 @@ import java.io.IOException;
 public class ExecutionView extends A_View{
     protected LockStack lockStack;
     protected PendingGraph pendingGraph;
+    protected TimelineHub timelineHub;
 
     /**
      * @see A_View#A_View(ViewsManager)
@@ -31,14 +32,20 @@ public class ExecutionView extends A_View{
         return this.lockStack;
     }
 
+//    public ExecutionView setTimelineHub(TimelineHub t){
+//        this.timelineHub = t;
+//        return this;
+//    }
+
     @Override
     protected ViewPanel setUp() {
-        if(this.getLockStack() == null) {
-            try {
+        try {
+            if(this.getLockStack() == null)
                 this.lockStack = new LockStack();
-            } catch (IOException|FontFormatException e) {
-                e.printStackTrace();
-            }
+
+            this.timelineHub = new TimelineHub();
+        } catch (IOException|FontFormatException e) {
+            e.printStackTrace();
         }
 
         ViewPanel panel = new ViewPanel();
@@ -73,13 +80,9 @@ public class ExecutionView extends A_View{
     protected ViewPanel getTransactionPanel(){
         ViewPanel p = new ViewPanel();
         p.setLayout(new GridLayout(1,1));
-        ViewPanel innerPanel = new ViewPanel();
-        for(char c : Range.make('a', 'z'))
-            innerPanel.addComponent(TRANSACTION_PANEL + "_" + c, new JButton(TRANSACTION_PANEL+ "_" + c));
-
-        final String SCROLLPANE = "scroll";
+//        ViewPanel innerPanel = new ViewPanel();
+        ViewPanel innerPanel = this.timelineHub;
         p.addComponent(SCROLLPANE, new JScrollPane(innerPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-
         return p;
     }
 
@@ -127,6 +130,10 @@ public class ExecutionView extends A_View{
         return pendingGraph;
     }
 
+    public TimelineHub getTimelineHub() {
+        return timelineHub;
+    }
+
     @Override
     public JMenuBar getViewMenuBar() { return null; }
 
@@ -148,4 +155,6 @@ public class ExecutionView extends A_View{
     public final static String LOCK_STACK_INNER = "stack-inner";
 
     public final static String PENDING_GRAPH = "ExecutionController@pendingGraph";
+    public final static String TIMELINE_HUB = "ExecutionController@timelineHub";
+    public final static String SCROLLPANE = "scroll";
 }

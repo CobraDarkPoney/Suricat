@@ -75,15 +75,13 @@ public class PendingGraph extends mxGraph implements I_Observer{
         String blocking = this.getLockList().whoHasStrictestLockOn(targetGranule);
         String edge = PendingGraph.makeEdgeLabel(target, type);
         Object parent = getParent();
-        Object sourceVertex=null, blockingVertex=null, insertedEdge=null;
+        Object sourceVertex, blockingVertex, insertedEdge;
 
         super.getModel().beginUpdate();
         try{
             switch (eventName){
                 case DBLockList.ADD_PENDING:
                     if(!this.vertices.containsKey(source)) {
-                        System.out.println("Source doesn't exist !");
-                        System.out.println("Name: " + source);
 //                        sourceVertex = super.insertVertex(parent, null, source, POS, POS, DIM, DIM);
                         sourceVertex = super.insertVertex(parent, source, source, POS, POS, DIM, DIM);
                         this.vertices.put(source, sourceVertex);
@@ -91,8 +89,6 @@ public class PendingGraph extends mxGraph implements I_Observer{
                         sourceVertex = this.vertices.get(source);
 
                     if(!this.vertices.containsKey(blocking)) {
-                        System.out.println("Blocking doesn't exist !");
-                        System.out.println("Name: " + blocking);
                         blockingVertex = super.insertVertex(parent, blocking, blocking, POS, POS, DIM, DIM);
 //                        blockingVertex = super.insertVertex(parent, null, blocking, POS, POS, DIM, DIM);
                         this.vertices.put(blocking, blockingVertex);

@@ -79,6 +79,8 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
+    public int getIndex() { return index; }
+
     public E_DBTransactionActionTypes getActionType(){ return type; }
 
     public String getSource() { return source; }

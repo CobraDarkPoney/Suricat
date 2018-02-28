@@ -9,6 +9,7 @@ import ladysnake.helpers.json.JsonReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @SuppressWarnings({"unchecked", "unused", "WeakerAccess", "SpellCheckingInspection"})
@@ -37,6 +38,11 @@ public class ModelsManager implements I_JsonSerializable{
     public DBTransaction getTransaction() { return this.transaction; }
     public DBTransactionExecution getExecution() { return execution; }
     public DBLockList getLockList(){ return this.getExecution().getLockList(); }
+    public List<String> getSources(){
+        return this.getTransaction().getActionsStream()
+        .map(DBTransactionAction::getSource)
+        .collect(Collectors.toList());
+    }
 
     @Override
     public JsonElement toJson() {

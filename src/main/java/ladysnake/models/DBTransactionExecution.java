@@ -18,6 +18,7 @@ public class DBTransactionExecution extends A_Observable{
 
         this.registerEvent(STOP);
         this.registerEvent(INDEX);
+        this.registerEvent(STEP_BEING_PROCESSED);
     }
 
     public DBTransactionExecution run(){
@@ -37,13 +38,14 @@ public class DBTransactionExecution extends A_Observable{
     public void execute(DBTransactionAction action){ this.executeAction(action); }
 
     public DBTransactionAction executeAction(DBTransactionAction action) {
-        this.trigger(DBTransactionExecution.INDEX, action.index);
+        this.trigger(DBTransactionExecution.INDEX, action.getIndex());
+        this.trigger(DBTransactionExecution.STEP_BEING_PROCESSED, action);
         if(!this.isRunning)
             return null;
 
         if(this.transaction.hasFailed(action.getSource())) {
             return null;
-          }
+        }
 
       DBLockList.Lock lock = new DBLockList.Lock(action);
       boolean canProcess = this.lockList.canProcessAction(lock, action.index);
@@ -111,6 +113,8 @@ public class DBTransactionExecution extends A_Observable{
         return this;
     }
 
-    public static final String STOP = "DBTransactionExecution@stop";
-    public static final String INDEX = "DBTransactionExecution@index";
+    public final static String EVENTS_BASENAME = "DBTransactionExecution@";
+    public static final String STOP = EVENTS_BASENAME + "stop";
+    public static final String INDEX = EVENTS_BASENAME + "index";
+    public static final String STEP_BEING_PROCESSED = EVENTS_BASENAME + "stepProcessed";
 }
