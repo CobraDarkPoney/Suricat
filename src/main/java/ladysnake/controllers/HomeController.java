@@ -13,10 +13,7 @@ import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetAdapter;
-import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -46,10 +43,6 @@ public class HomeController extends A_Controller{
     }
 
     private void addDragAndDrop(ViewPanel viewPanel, ViewsManager manager){
-        JButton button = viewPanel.<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
-        .<ViewPanel>getComponentAs(HomeView.BUTTON_PANEL)
-        .<JButton>getComponentAs(HomeView.FILE_CHOOSER_BTN);
-
         DropTarget target = new DropTarget(viewPanel, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
             @Override
             public void drop(DropTargetDropEvent e) {

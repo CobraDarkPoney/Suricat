@@ -1,5 +1,6 @@
 package ladysnake.views;
 
+import javafx.embed.swing.JFXPanel;
 import ladysnake.App;
 
 import javax.imageio.ImageIO;
