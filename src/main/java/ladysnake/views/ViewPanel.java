@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
-public class ViewPanel extends JPanel implements I_MightNoNullParams, I_TaggedComponentContainer<JPanel>{
+public class ViewPanel extends JPanel implements I_MightNoNullParams, I_TaggedComponentContainer{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +44,10 @@ public class ViewPanel extends JPanel implements I_MightNoNullParams, I_TaggedCo
 
     public ViewPanel(){
         this(true);
+    }
+
+    public ViewPanel(JComponent component){
+        this(component.getLayout(), component.isDoubleBuffered());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,9 +151,9 @@ public class ViewPanel extends JPanel implements I_MightNoNullParams, I_TaggedCo
         this.assertParamsAreNotNull(tag);
 
         return this.components.stream()
-                .filter(component -> component.getTag().equals(tag))
-                .findFirst()
-                .orElse(null);
+        .filter(component -> component.getTag().equals(tag))
+        .findFirst()
+        .orElse(null);
     }
 
     /**
@@ -187,5 +191,24 @@ public class ViewPanel extends JPanel implements I_MightNoNullParams, I_TaggedCo
     @Override
     public int hashCode() {
         return components.hashCode();
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder ret = new StringBuilder();
+        ret.append("<ViewPanel>\n")
+        .append("<SubTaggedComponents>\n");
+
+        String components = this.components
+        .stream()
+        .map(c -> c.toString()+"\n")
+        .reduce(String::concat)
+        .orElse("");
+        ret.append(components);
+
+        ret .append("</SubTaggedComponents>\n")
+        .append("</ViewPanel>");
+
+        return ret.toString();
     }
 }

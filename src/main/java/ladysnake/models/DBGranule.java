@@ -1,6 +1,5 @@
 package ladysnake.models;
 
-import com.google.gson.JsonElement;
 import ladysnake.helpers.json.I_JsonSerializable;
 import ladysnake.helpers.utils.I_Stringify;
 

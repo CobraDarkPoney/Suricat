@@ -34,6 +34,12 @@ public enum E_DBTransactionActionTypes {
      */
     public String getName(){ return this.description; }
 
+    public boolean mightFree(){
+        return this.equals(E_DBTransactionActionTypes.commit)
+        || this.equals(E_DBTransactionActionTypes.upd)
+        || this.equals(E_DBTransactionActionTypes.rollback);
+    }
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////

@@ -12,7 +12,7 @@ import java.util.Objects;
  * @param <T> Being a class from which this {@link I_TaggedComponentContainer} inherits from (e.g. JFrame, JPanel, etc...)
  */
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
-public interface I_TaggedComponentContainer<T extends Component>{
+public interface I_TaggedComponentContainer{
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,21 +100,26 @@ public interface I_TaggedComponentContainer<T extends Component>{
      * @param tag being the tag of the component to remove
      * @return this {@link I_TaggedComponentContainer}
      */
-    I_TaggedComponentContainer<T> removeComponent(String tag);
+    I_TaggedComponentContainer removeComponent(String tag);
 
     /**Shows this {@link I_TaggedComponentContainer}
      * @return this {@link I_TaggedComponentContainer}
      */
-    default I_TaggedComponentContainer<T> display(){
-        ((T)this).setVisible(true);
+    default I_TaggedComponentContainer display(){
+        this.setVisible(true);
         return this;
     }
 
     /**Hides this {@link I_TaggedComponentContainer}
      * @return this {@link I_TaggedComponentContainer}
      */
-    default I_TaggedComponentContainer<T> goInvisible(){
-        ((T)this).setVisible(false);
+    default I_TaggedComponentContainer goInvisible(){
+        this.setVisible(false);
         return this;
     }
+
+    /**
+     * @see Component#setVisible(boolean)
+     */
+    void setVisible(boolean flag);
 }

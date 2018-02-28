@@ -33,10 +33,11 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
     protected boolean executed;
 
 
-    
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
+
     /**Advanced constructor
      * @param source being the source of this {@link DBTransactionAction} (an identifier)
      * @param index being the index in the execution of a {@link DBTransaction}
@@ -78,12 +79,37 @@ public class DBTransactionAction implements I_Stringify, I_JsonSerializable, Com
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
+    public E_DBTransactionActionTypes getActionType(){ return type; }
+
+    public String getSource() { return source; }
+
+    public DBGranule getTarget() { return target; }
+
+    public E_DBTransactionActionTypes getType() { return type; }
+
+    public E_DBLockTypes getLock() { return lock; }
+
+    public DBTransactionAction setLock(E_DBLockTypes type) {
+      this.assertParamsAreNotNull(type);
+      this.lock = type;
+      return this;
+    }
+
+    public boolean isCompleted() {
+      return this.executed;
+    }
+
     /**A method that completes this {@link DBTransactionAction}
      * @return this {@link DBTransactionAction} (for chaining purposes)
      */
     public DBTransactionAction complete(){
         this.executed = true;
         return this;
+    }
+
+    public boolean willFree(){
+        //TODO: TRUE if frees granule
+        return true;
     }
 
     @Override

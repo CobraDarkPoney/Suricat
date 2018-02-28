@@ -1,19 +1,20 @@
 package ladysnake.models;
 
 import ladysnake.helpers.utils.I_MightNoNullParams;
+import ladysnake.helpers.utils.I_Stringify;
 
 /**An Enum representing most Lock Types used in Databases
  * @author Ludwig GUERIN
  */
 @SuppressWarnings("unused")
 public enum E_DBLockTypes {
-    XE("ExclusiveExtended", 0),
-    X("Exclusive", 1),
-    SE("SharedExclusive", 2),
-    S("Shared", 3),
-    UE("UpdateExtended", 4),
-    U("Update", 5),
-    NONE("None", 6);
+    XE("ExclusiveExtended", 0, E_Permissions.READWRITE, E_Permissions.NONE),
+    X("Exclusive", 1, E_Permissions.READWRITE, E_Permissions.NONE),
+    UE("UpdateExtended", 2, E_Permissions.READTRANSFORM, E_Permissions.READ),
+    U("Update", 3, E_Permissions.READTRANSFORM, E_Permissions.READ),
+    SE("SharedExclusive", 4, E_Permissions.READ, E_Permissions.READ),
+    S("Shared", 5, E_Permissions.READ, E_Permissions.READ),
+    NONE("None", 6, E_Permissions.READWRITE, E_Permissions.READWRITE);
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
@@ -25,24 +26,42 @@ public enum E_DBLockTypes {
      */
     private final int index;
 
+    private final E_Permissions selfPerms;
+
+    private final E_Permissions otherPerms;
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
-    E_DBLockTypes(String type, int val){
-        I_MightNoNullParams.assertNoneNull(type, val);
+    E_DBLockTypes(String type, int val, E_Permissions selfPerms, E_Permissions otherPerms){
+        I_MightNoNullParams.assertNoneNull(type, val, selfPerms, otherPerms);
 
         this.lock = type;
         this.index = val;
+        this.selfPerms = selfPerms;
+        this.otherPerms = otherPerms;
     }
 
     @Override
     public String toString() {
+        return this.stringify();
+    }
+
+    public String stringify(){return this.stringify("");}
+
+    public String stringify(String tabLevel){
+        I_MightNoNullParams.assertNoneNull(tabLevel);
+
+        if(!I_Stringify.isTab(tabLevel))
+            return I_Stringify.STRINGIFY_ERROR_MESSAGE;
+
         String ret = "";
-        ret += "<E_DBLockTypes>\n";
-        ret += "lock: " + this.lock + "\n";
-        ret += "index: " + this.index + "\n";
-        ret += "</E_DBLockTypes>\n";
+
+        ret += tabLevel + "<E_DBLockTypes>\n";
+        ret += tabLevel + "\t" + "lock: " + this.lock + "\n";
+        ret += tabLevel + "\t" + "index: " + this.index + "\n";
+        ret += tabLevel + "</E_DBLockTypes>\n";
 
         return ret;
     }
@@ -55,14 +74,46 @@ public enum E_DBLockTypes {
      */
     public String getName(){ return lock; }
 
+    public E_Permissions getSelfPerms() {
+      return selfPerms;
+    }
+
+    public E_Permissions getOtherPerms() {
+      return otherPerms;
+    }
+
     /**Determine whether this {@link E_DBLockTypes} is compatible with the given one or not
      * @param otherLock being the lock to check the compatibility with the current ont
      * @return TRUE if compatible, FALSE otherwise
      */
     public boolean compatibleWith(E_DBLockTypes otherLock){
         I_MightNoNullParams.assertNoneNull(otherLock);
+        //TODO: Upgrade with special cases (eg. None cases)  :: Théowen ?
+        return  E_DBLockTypes.grantPermissions[this.index][otherLock.index];
+    }
 
-        return  E_DBLockTypes.compatibility[this.index][otherLock.index];
+    public boolean stricterThan(E_DBLockTypes rhs){
+      return this.index < rhs.index;
+    }
+
+    public boolean isShared() {
+      return this.equals(E_DBLockTypes.S) || this.equals(E_DBLockTypes.SE);
+    }
+
+    public boolean isUpdate() {
+      return this.equals(E_DBLockTypes.U) || this.equals(E_DBLockTypes.UE);
+    }
+
+    public boolean isExclusive() {
+      return this.equals(E_DBLockTypes.X) || this.equals(E_DBLockTypes.XE);
+    }
+
+    public boolean isExtended() {
+      return this.equals(E_DBLockTypes.SE) || this.equals(E_DBLockTypes.UE) || this.equals(E_DBLockTypes.XE);
+    }
+
+    public boolean isNone() {
+      return this.equals(E_DBLockTypes.NONE);
     }
 
 
@@ -75,7 +126,6 @@ public enum E_DBLockTypes {
      */
     public static E_DBLockTypes get(String name){
         I_MightNoNullParams.assertNoneNull(name);
-
         return E_DBLockTypes.valueOf(name.toUpperCase());
     }
 
@@ -84,16 +134,31 @@ public enum E_DBLockTypes {
     ////////////////////////////////////////////////////////////////////////////////////////////
     /**A compatibility matrix*/
     //                             x y
-    public static boolean[][] compatibility =  {
+    public static boolean[][] grantPermissions =  {
+            //TODO: fix for special cases of NONE (eg. upd)
+
             //  y\x      XE         X     UE    U      SE    S      NONE
-           /*XE*/       {false, false, false, false, false, false, false},
-           /*X*/         {false, false, false, false, false, false, false},
-            /*UE*/      {false, false, false, false, true, true, false},
-            /*U*/        {false, false, false, false, true, true, false},
+           /*XE*/       {false, false, false, false, false, false, true},
+           /*X*/         {false, false, false, false, false, false, true},
+            /*UE*/      {false, false, false, false, true, true, true},
+            /*U*/        {false, false, false, false, true, true, true},
             /*SE*/      {false, false, true, true, true, true, true},
             /*S*/        {false, false, true, true, true, true, true},
-            /*NONE*/ {false, false, false, false, true, true, true}
+            /*NONE*/ {true, true, true, true, true, true, true}
 
-            //How it works: X is compatible with Y if compatibility[X][Y] is true
+            //How it works: X is compatible with Y if compatibility[Y[X] is true
     };
+
+    public enum E_Permissions {
+      NONE,
+      READ,
+      READTRANSFORM,
+      READWRITE;
+
+      public boolean matches(E_DBTransactionActionTypes type){
+        if(type.equals(E_DBTransactionActionTypes.find))
+          return !this.equals(E_Permissions.NONE);
+        return this.equals(E_Permissions.READWRITE);
+      }
+    }
 }

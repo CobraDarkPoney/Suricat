@@ -1,32 +1,61 @@
 package ladysnake.views;
 
+
+import com.mxgraph.swing.mxGraphComponent;
+import ladysnake.helpers.utils.Range;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 /**An {@link A_View} dedicated to the execution of the transactions
  */
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
-public class ExecutionView extends A_View {
+public class ExecutionView extends A_View{
+    protected LockStack lockStack;
+    protected PendingGraph pendingGraph;
+
+    /**
+     * @see A_View#A_View(ViewsManager)
+     */
+    public ExecutionView(ViewsManager manager) throws IOException, FontFormatException {
+        super(manager);
+        if(this.getLockStack() == null)
+            this.lockStack = new LockStack();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Methods
     ////////////////////////////////////////////////////////////////////////////////////////////
+    public LockStack getLockStack() {
+        return this.lockStack;
+    }
+
     @Override
     protected ViewPanel setUp() {
+        if(this.getLockStack() == null) {
+            try {
+                this.lockStack = new LockStack();
+            } catch (IOException|FontFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
         ViewPanel panel = new ViewPanel();
         panel.setLayout(new GridLayout(GRID_ROWS, GRID_COLS, GRID_SPACING, GRID_SPACING));
-        panel.addComponent(TRANSACTION_PANEL, this.getTransactionPanel());
-        panel.addComponent(RHS_PANEL, this.getRhsPanel());
+        panel.addComponent(TRANSACTION_PANEL, this.getTransactionPanel())
+        .addComponent(RHS_PANEL, this.getRhsPanel());
 
         panel.<ViewPanel>getComponentAs(RHS_PANEL)
         .addComponent(LOCK_STACK_PANEL, this.getLockStackPanel())
-        .addComponent(WAITING_GRAPH_PANEL, this.getWaitingGraphPanel());
+        .addComponent(PENDING_GRAPH_PANEL, this.getPendingGraphPanel());
 
         return panel;
     }
 
     @Override
     public String getViewTitle() {
-        return "Exécution";
+        return "Suricat - Exécution";
     }
 
     /**Retrieves the {@link ViewPanel} the constitutes this {@link A_View}'s right hand side panel
@@ -43,9 +72,22 @@ public class ExecutionView extends A_View {
      */
     protected ViewPanel getTransactionPanel(){
         ViewPanel p = new ViewPanel();
-        p.setLayout(new GridLayout());
-        p.addComponent("rect", new JButton(TRANSACTION_PANEL));
+        p.setLayout(new GridLayout(1,1));
+        ViewPanel innerPanel = new ViewPanel();
+        for(char c : Range.make('a', 'z'))
+            innerPanel.addComponent(TRANSACTION_PANEL + "_" + c, new JButton(TRANSACTION_PANEL+ "_" + c));
+
+        final String SCROLLPANE = "scroll";
+        p.addComponent(SCROLLPANE, new JScrollPane(innerPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+
         return p;
+    }
+
+    protected ScrollPaneLayout getNewBothScrollingLayout(){
+        ScrollPaneLayout scrollPaneLayout = new ScrollPaneLayout();
+        scrollPaneLayout.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPaneLayout.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        return scrollPaneLayout;
     }
 
     /**Retrieves the {@link ViewPanel} the constitutes this {@link A_View}'s lock stack panel
@@ -54,32 +96,56 @@ public class ExecutionView extends A_View {
     protected ViewPanel getLockStackPanel(){
         ViewPanel p = new ViewPanel();
         p.setLayout(new GridLayout());
-        p.addComponent("rect", new JButton(LOCK_STACK_PANEL));
+//        p.addComponent(LOCK_STACK, lockStack);
+        ViewPanel innerPanel = new ViewPanel();
+        innerPanel.setLayout(new GridBagLayout());
+        innerPanel.addComponent(LOCK_STACK, this.getLockStack());
+        JScrollPane scrollPane = new JScrollPane(innerPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setViewportView(this.getLockStack());
+        p.addComponent(LOCK_STACK, scrollPane);
         return p;
     }
 
-    /**Retrieves the {@link ViewPanel} the constitutes this {@link A_View}'s waiting graph panel
+    /**Retrieves the {@link ViewPanel} the constitutes this {@link A_View}'s pending graph panel
      * @return the constructed {@link ViewPanel}
      */
-    protected ViewPanel getWaitingGraphPanel(){
+    protected ViewPanel getPendingGraphPanel(){
         ViewPanel p =new ViewPanel();
         p.setLayout(new GridLayout());
-        p.addComponent("rect", new JButton(WAITING_GRAPH_PANEL));
+//        this.pendingGraph = new PendingGraph();
+//        VisualPendingGraph graph = new VisualPendingGraph(this.pendingGraph);
+//        this.graphComponent = new mxGraphComponent(graph);
+////        JScrollPane scrollPane = new JScrollPane(this.graphComponent, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        p.addComponent(PENDING_GRAPH, this.graphComponent);
+        this.pendingGraph = new PendingGraph();
+        mxGraphComponent graphComponent = new mxGraphComponent(this.pendingGraph);
+        p.addComponent(PENDING_GRAPH, graphComponent);
         return p;
     }
+
+    public PendingGraph getPendingGraph() {
+        return pendingGraph;
+    }
+
+    @Override
+    public JMenuBar getViewMenuBar() { return null; }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class properties
     ////////////////////////////////////////////////////////////////////////////////////////////
-    protected static int GRID_ROWS = 1;
-    protected static int GRID_COLS = 2;
-    protected static int GRID_SPACING = 10;
+    public final static int GRID_ROWS = 1;
+    public final static int GRID_COLS = 2;
+    public final static int GRID_SPACING = 10;
 
-    protected static int RHS_ROWS = 2;
-    protected static int RHS_COLS = 1;
+    public final static int RHS_ROWS = 2;
+    public final static int RHS_COLS = 1;
 
-    protected static String TRANSACTION_PANEL = "Transaction";
-    protected static String RHS_PANEL = "rhs-panel";
-    protected static String LOCK_STACK_PANEL = "Locks";
-    protected static String WAITING_GRAPH_PANEL = "Waitings";
+    public final static String TRANSACTION_PANEL = "Transaction";
+    public final static String RHS_PANEL = "rhs-panel";
+    public final static String LOCK_STACK_PANEL = "Locks";
+    public final static String PENDING_GRAPH_PANEL = "Pendings";
+    public final static String LOCK_STACK = "lock-stack";
+    public final static String LOCK_STACK_INNER = "stack-inner";
+
+    public final static String PENDING_GRAPH = "ExecutionController@pendingGraph";
 }
