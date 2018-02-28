@@ -37,7 +37,7 @@ public class TimelineHub extends ViewPanel implements I_Observer, I_MightNoNullP
 
     @Override
     public void handleEvent(String eventName, Object... args) {
-        System.out.println("Handling event: " + eventName);
+//        System.out.println("Handling event: " + eventName);
 
         if(!EVENTS_HANDLED.contains(eventName))
             return;

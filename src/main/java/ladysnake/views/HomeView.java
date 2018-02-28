@@ -4,12 +4,17 @@ import ladysnake.App;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.text.View;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class HomeView extends A_View{
@@ -36,6 +41,7 @@ public class HomeView extends A_View{
         } catch (FontFormatException e) {
             e.printStackTrace();
         }
+
         return panel;
     }
 

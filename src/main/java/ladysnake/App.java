@@ -16,9 +16,9 @@ public class App {
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Properties
     ////////////////////////////////////////////////////////////////////////////////////////////
-    ControllersManager cm;
-    ModelsManager mm;
-    ViewsManager vm;
+    protected ControllersManager cm;
+    protected ModelsManager mm;
+    protected ViewsManager vm;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Constructors
@@ -59,6 +59,10 @@ public class App {
         vm.display();
     }
 
+    public ModelsManager getModelsManager() { return mm; }
+    public ViewsManager getViewsManager() { return vm; }
+    public ControllersManager getControllersManager() { return cm; }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class properties
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +90,19 @@ public class App {
     protected static void out(Object msg){ System.out.println(msg); }
 
     public static void main(String[] args) throws IOException, UnsupportedLookAndFeelException, FontFormatException {
-        App.make().run();
+        App app = App.make();
+        if(args.length > 0){
+            String filePath = args[0];
+            File file = new File(filePath);
+            HomeController homeController = ((HomeController) app.getControllersManager().getController(App.HOME_VIEW_TAG));
+
+            if(!homeController.fileIsJson(file)){
+                System.out.println("<{  " + filePath + "  }>" + " is not a JSON file");
+                System.exit(-1);
+            }
+
+            homeController.goExecution(file);
+        }
+        app.run();
     }
 }

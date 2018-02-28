@@ -9,10 +9,18 @@ import ladysnake.views.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.crypto.Data;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class HomeController extends A_Controller{
@@ -35,6 +43,44 @@ public class HomeController extends A_Controller{
     @Override
     public void addListeners() {
         this.addListenersToFileChooserButton(this.view.getViewPanel(), this.getViewsManager());
+    }
+
+    private void addDragAndDrop(ViewPanel viewPanel, ViewsManager manager){
+        JButton button = viewPanel.<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
+        .<ViewPanel>getComponentAs(HomeView.BUTTON_PANEL)
+        .<JButton>getComponentAs(HomeView.FILE_CHOOSER_BTN);
+
+        DropTarget target = new DropTarget(viewPanel, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
+            @Override
+            public void drop(DropTargetDropEvent e) {
+                System.out.println("Drop / 20");
+                if((e.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) == 0)
+                    return;
+
+                e.acceptDrop(e.getDropAction());
+                try {
+//                    java.util.List files = (List)e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+//                    File file = (File)files.get(0);
+//                    HomeController.this.goExecution(file);
+                    for(DataFlavor df : e.getTransferable().getTransferDataFlavors()) {
+                        if (df.isFlavorJavaFileListType()) {
+                            List<File> files = (List<File>) (e.getTransferable().getTransferData(df));
+                            if (files.size() < 1)
+                                return;
+
+                            File file = files.get(0);
+                            if(!HomeController.this.fileIsJson(file))
+                                e.rejectDrop();
+
+                            HomeController.this.goExecution(file);
+                            e.dropComplete(true);
+                        }
+                    }
+                } catch (UnsupportedFlavorException | IOException | UnsupportedLookAndFeelException exc) {
+                    exc.printStackTrace();
+                }
+            }
+        }, true, null);
     }
 
     private void addListenersToFileChooserButton(ViewPanel viewPanel, ViewsManager manager) {
@@ -117,7 +163,10 @@ public class HomeController extends A_Controller{
         };
     }
 
-    protected void goExecution(File selectedFile) throws IOException, UnsupportedLookAndFeelException {
+    public void goExecution(File selectedFile) throws IOException, UnsupportedLookAndFeelException {
+        if(!this.fileIsJson(selectedFile))
+            return;
+
         String path = selectedFile.getAbsolutePath();
         this.getControllersManager().setModelsManager(ModelsManager.fromFile(path));
         this.attachLockListListeners();
@@ -151,6 +200,15 @@ public class HomeController extends A_Controller{
 //        .on(DBLockList.RM_LOCK, TextApp::eventHandler)
 //        .on(DBLockList.ADD_PENDING, TextApp::eventHandler)
 //        .on(DBLockList.RM_PENDING, TextApp::eventHandler);
+    }
+
+    public boolean fileIsJson(File f){
+        boolean canOpen = true;
+
+        if(f.isFile() && !f.getName().replaceAll("^.+\\.([^.]+)$", "$1").equals("json"))
+            canOpen = false;
+
+        return f.canRead() && canOpen;
     }
 
     protected JFileChooser getFileChooser(){
