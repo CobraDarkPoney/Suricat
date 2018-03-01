@@ -8,6 +8,8 @@ import ladysnake.models.ModelsManager;
 import ladysnake.views.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.crypto.Data;
 import java.awt.*;
@@ -15,6 +17,10 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.ColorModel;
+import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -39,41 +45,64 @@ public class HomeController extends A_Controller{
     ////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void addListeners() {
-        this.addListenersToFileChooserButton(this.view.getViewPanel(), this.getViewsManager());
+        ViewPanel viewPanel = this.view.getViewPanel();
+        ViewsManager viewsManager = this.getViewsManager();
+        this.addListenersToFileChooserButton(viewPanel, viewsManager);
+        this.addDragAndDrop(viewPanel, viewsManager);
     }
 
     private void addDragAndDrop(ViewPanel viewPanel, ViewsManager manager){
-        DropTarget target = new DropTarget(viewPanel, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
-            @Override
-            public void drop(DropTargetDropEvent e) {
-                System.out.println("Drop / 20");
-                if((e.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) == 0)
-                    return;
+//        DropTarget target = new DropTarget(viewPanel, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
+//            @Override
+//            public void drop(DropTargetDropEvent e) {
+//                System.out.println("Drop / 20");
+//                if((e.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) == 0)
+//                    return;
+//
+//                e.acceptDrop(e.getDropAction());
+//                try {
+////                    java.util.List files = (List)e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+////                    File file = (File)files.get(0);
+////                    HomeController.this.goExecution(file);
+//                    for(DataFlavor df : e.getTransferable().getTransferDataFlavors()) {
+//                        if (df.isFlavorJavaFileListType()) {
+//                            List<File> files = (List<File>) (e.getTransferable().getTransferData(df));
+//                            if (files.size() < 1)
+//                                return;
+//
+//                            File file = files.get(0);
+//                            if(!HomeController.this.fileIsJson(file))
+//                                e.rejectDrop();
+//
+//                            HomeController.this.goExecution(file);
+//                            e.dropComplete(true);
+//                        }
+//                    }
+//                } catch (UnsupportedFlavorException | IOException | UnsupportedLookAndFeelException exc) {
+//                    exc.printStackTrace();
+//                }
+//            }
+//        }, true, null);
+        FileDrop.Listener listener = files -> {
+            System.out.println("Files being dropped");
 
-                e.acceptDrop(e.getDropAction());
-                try {
-//                    java.util.List files = (List)e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-//                    File file = (File)files.get(0);
-//                    HomeController.this.goExecution(file);
-                    for(DataFlavor df : e.getTransferable().getTransferDataFlavors()) {
-                        if (df.isFlavorJavaFileListType()) {
-                            List<File> files = (List<File>) (e.getTransferable().getTransferData(df));
-                            if (files.size() < 1)
-                                return;
+            if(files.length < 1)
+                return;
 
-                            File file = files.get(0);
-                            if(!HomeController.this.fileIsJson(file))
-                                e.rejectDrop();
+            File file = files[0];
+            HomeController that = HomeController.this;
+            if(!that.fileIsJson(file))
+                return;
 
-                            HomeController.this.goExecution(file);
-                            e.dropComplete(true);
-                        }
-                    }
-                } catch (UnsupportedFlavorException | IOException | UnsupportedLookAndFeelException exc) {
-                    exc.printStackTrace();
-                }
+            try {
+                that.goExecution(file);
+            } catch (IOException | UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
             }
-        }, true, null);
+        };
+        new FileDrop(viewPanel, BORDER, listener);
+//        new FileDrop(viewPanel.<ViewPanel>getComponentAs(HomeView.RHS_PANEL), listener);
+//        new FileDrop(viewPanel.<ViewPanel>getComponentAs(HomeView.LOGO_PANEL), listener);
     }
 
     private void addListenersToFileChooserButton(ViewPanel viewPanel, ViewsManager manager) {
@@ -224,8 +253,14 @@ public class HomeController extends A_Controller{
             }
         });
 
+
         return fileChooser;
     }
 
     public final static Dimension FILE_CHOOSER_DIM = new Dimension(600, 400);
+    public final static int BORDER_SIZE = 6;
+    public final static Color BORDER_COLOR = new Color(0x3b5998);
+//    public final static Border BORDER = BorderFactory.createMatteBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_COLOR);
+    public final static Border DASHED_BORDER = BorderFactory.createDashedBorder(BORDER_COLOR, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE,  true);
+    public final static Border BORDER = BorderFactory.createTitledBorder(DASHED_BORDER, "Drag & Drop", TitledBorder.CENTER, TitledBorder.ABOVE_TOP);
 }
