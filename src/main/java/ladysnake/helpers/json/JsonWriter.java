@@ -1,6 +1,7 @@
 package ladysnake.helpers.json;
 
 import com.google.gson.*;
+import ladysnake.helpers.log.Logger;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -61,6 +62,7 @@ public class JsonWriter {
      * @throws IOException for any kind of errors whille attempting to read the file
      */
     public JsonWriter writeString(String str) throws IOException {
+        Logger.triggerEvent(Logger.VERBOSE, "Writing `" + str + "` to " + this.fileURI);
         final Path path = Paths.get(this.fileURI);
         final BufferedWriter writer = Files.newBufferedWriter(path, charset, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         writer.append( JsonBuilder.toJson(str) );
@@ -74,6 +76,7 @@ public class JsonWriter {
      * @throws IOException for any kind of errors whille attempting to read the file
      */
     public JsonWriter writeJsonElement(JsonElement elem) throws IOException{
+        Logger.triggerEvent(Logger.VERBOSE, "Writing `" + elem.toString() + "` to " + this.fileURI);
         final Path path = Paths.get(this.fileURI);
         final BufferedWriter writer = Files.newBufferedWriter(path, charset, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         writer.append( JsonBuilder.toJson(elem) );
@@ -84,9 +87,9 @@ public class JsonWriter {
     /**Switch the JSON file this {@link JsonWriter} is associated to
      * @param URI being the URI to the new JSON file
      * @return this {@link JsonWriter} (for chaining purposes)
-     * @throws IOException for any kind of errors whille attempting to read the file
      */
-    public JsonWriter switchFile(String URI) throws IOException{
+    public JsonWriter switchFile(String URI)/* throws IOException*/{
+        Logger.triggerEvent(Logger.VERBOSE, "Switching writing file to " + this.fileURI);
         this.fileURI = URI;
         return this;
     }

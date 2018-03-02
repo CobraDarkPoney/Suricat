@@ -48,6 +48,13 @@ public class Timeline extends ViewPanel implements I_MightNoNullParams {
         return this;
     }
 
+    public Timeline reset(){
+        this.<ViewPanel>getComponentAs(ENTRIES_HOLDER).removeAll();
+        super.repaint();
+        super.revalidate();
+        return this;
+    }
+
 //    public ViewPanel getPanel() throws IOException, FontFormatException {
 //        ViewPanel viewPanel = new ViewPanel();
 //        viewPanel.setLayout(new BorderLayout());

@@ -250,4 +250,6 @@ public class MenuBarBuilder implements I_MightNoNullParams{
         ret += "</MenuBarBuilder>\n";
         return ret;
     }
+
+    public static MenuBarBuilder getNewBuilder(){ return new MenuBarBuilder(); }
 }

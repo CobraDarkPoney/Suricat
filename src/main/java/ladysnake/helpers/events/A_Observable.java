@@ -1,5 +1,7 @@
 package ladysnake.helpers.events;
 
+import ladysnake.helpers.log.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ public abstract class A_Observable implements I_Observable {
         if(!this.eventIsRegistered(eventName))
             this.observers.put(eventName, new ArrayList<>());
 
+//        Logger.triggerEvent(Logger.VERBOSE, "Trying to register the " + (this.eventIsRegistered(eventName) ? "registered" : "unregistered") + " event `" + eventName + "`");
         return this;
     }
 }

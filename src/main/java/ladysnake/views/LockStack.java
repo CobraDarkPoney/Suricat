@@ -2,6 +2,7 @@ package ladysnake.views;
 
 import ladysnake.App;
 import ladysnake.helpers.events.I_Observer;
+import ladysnake.helpers.log.Logger;
 import ladysnake.models.DBLockList;
 import ladysnake.models.DBTransactionAction;
 
@@ -11,38 +12,59 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"unchecked", "unused", "WeakerAccess", "SpellCheckingInspection"})
 public class LockStack extends JTable implements I_Observer{
     @Override
     public void handleEvent(String eventName, Object... args) {
         switch (eventName){
+            case DBLockList.REPAINT:
+                super.invalidate();
+                super.repaint();
+                super.revalidate();
+                break;
+
+            case DBLockList.RESET:
+                this.model = getInitialTableModel();
+                super.setModel(this.model);
+                break;
+
             case DBLockList.ADD_LOCK:
                 DBLockList.Lock lock = ((DBLockList.Lock) args[0]);
                 String action = args[1].toString();
                 this.addRowData(Operations.ADD, lock.getSource(), action, lock.getType().getName(), lock.getTarget().getName());
+                super.setModel(this.model);
                 break;
 
             case DBLockList.RM_LOCK:
                 DBLockList.Lock lock_rm = ((DBLockList.Lock) args[0]);
                 this.addRowData(Operations.RM, lock_rm.getSource(),  lock_rm.getType().getName(), lock_rm.getTarget().getName());
+                super.setModel(this.model);
                 break;
 
             case DBLockList.ADD_PENDING:
                 DBTransactionAction transactionAction = ((DBTransactionAction) args[0]);
                 this.addRowData(Operations.ADD_PENDING, transactionAction.getSource(), transactionAction.getActionType().getName(), transactionAction.getLock().getName(), transactionAction.getTarget().getName());
+                super.setModel(this.model);
                 break;
 
             case DBLockList.RM_PENDING:
                 DBTransactionAction transactionAction_rm = ((DBTransactionAction) args[0]);
                 this.addRowData(Operations.RM_PENDING, transactionAction_rm.getSource(), transactionAction_rm.getActionType().getName(), transactionAction_rm.getLock().getName(), transactionAction_rm.getTarget().getName());
+                super.setModel(this.model);
                 break;
             default:
-                System.out.println("Unhandled case : LockStack@handleEvent");
+                Logger.triggerEvent(Logger.ERROR, "Unhandled case : LockStack@handleEvent");
                 break;
         }
+
+        super.invalidate();
+        super.repaint();
+        super.revalidate();
     }
 
     public enum Operations{
@@ -146,9 +168,8 @@ public class LockStack extends JTable implements I_Observer{
     protected DefaultTableModel model;
     protected List<LockStack.Lock> locks;
 
-    public LockStack() throws IOException, FontFormatException {
-        this.locks = new ArrayList<>();
-        this.model = new DefaultTableModel(){
+    public static DefaultTableModel getInitialTableModel(){
+        return new DefaultTableModel(){
 //            @Override
 //            public int getRowCount() {
 //                return LockStack.this.locks.size();
@@ -169,6 +190,11 @@ public class LockStack extends JTable implements I_Observer{
                 return false;
             }
         };
+    }
+
+    public LockStack() throws IOException, FontFormatException {
+        this.locks = new ArrayList<>();
+        this.model = getInitialTableModel();
 //        this.model.addRow(COLUMN_NAMES);
         super.setModel(this.model);
         this.setIntercellSpacing(new Dimension(SPACING, SPACING));
@@ -184,6 +210,9 @@ public class LockStack extends JTable implements I_Observer{
 //        this.model.addRow(lock.getVector());
         this.locks.add(lock);
         this.model.addRow(lock.getArray());
+        String log = Arrays.stream(lock.getArray()).map(o -> ((String) o)).collect(Collectors.joining(", "));
+        this.setModel(this.model);
+        Logger.triggerEvent(Logger.VERBOSE, "Adding lock: " + log);
         return this;
     }
 

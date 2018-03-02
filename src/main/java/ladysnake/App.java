@@ -1,15 +1,20 @@
 package ladysnake;
 
 //mport ladysnake.models.*;
+import ladysnake.helpers.events.I_Observer;
+import ladysnake.helpers.log.Logger;
 import ladysnake.models.ModelsManager;
 import ladysnake.views.*;
 import ladysnake.controllers.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class App {
@@ -24,6 +29,10 @@ public class App {
     ////Constructors
     ////////////////////////////////////////////////////////////////////////////////////////////
     public App() throws IOException, UnsupportedLookAndFeelException, FontFormatException {
+        SharedMenuBar.retrieveJMenuBar(); //First build of the menu
+        ExecutionMenuBar.getMenuBar(); //First build of the menu
+        Logger.bootstrap(); //First build of the Logger
+
         this.vm = new ViewsManager(App.TITLE, App.DIMENSION);
         this.vm.setMinimumSize(App.MIN_DIMENSION);
         this.vm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -91,13 +100,25 @@ public class App {
 
     public static void main(String[] args) throws IOException, UnsupportedLookAndFeelException, FontFormatException {
         App app = App.make();
+
+        I_Observer simpleLogObserver = (eventName, optArgs) -> {
+            String argString =  Arrays.stream(optArgs)
+            .map(o -> ((String) o))
+            .collect(Collectors.joining(", "));
+            System.out.println(eventName + ": " + argString);
+        };
+//        Logger.addListener(Logger.LOG, simpleLogObserver);
+        Logger.addListener(Logger.ERROR, simpleLogObserver);
+        Logger.addListener(Logger.WARNING, simpleLogObserver);
+        Logger.addListener(Logger.VERBOSE, simpleLogObserver);
+
         if(args.length > 0){
             String filePath = args[0];
             File file = new File(filePath);
             HomeController homeController = ((HomeController) app.getControllersManager().getController(App.HOME_VIEW_TAG));
 
             if(!homeController.fileIsJson(file)){
-                System.out.println("<{  " + filePath + "  }>" + " is not a JSON file");
+                Logger.triggerEvent(Logger.ERROR, "<{  " + filePath + "  }>" + " is not a JSON file");
                 System.exit(-1);
             }
 

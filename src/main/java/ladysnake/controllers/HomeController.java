@@ -2,6 +2,7 @@ package ladysnake.controllers;
 
 import ladysnake.App;
 import ladysnake.TextApp;
+import ladysnake.helpers.log.Logger;
 import ladysnake.models.DBLockList;
 import ladysnake.models.DBTransactionExecution;
 import ladysnake.models.ModelsManager;
@@ -52,6 +53,7 @@ public class HomeController extends A_Controller{
     }
 
     private void addDragAndDrop(ViewPanel viewPanel, ViewsManager manager){
+        Logger.triggerEvent(Logger.VERBOSE, "Adding Drag&Drop logic");
 //        DropTarget target = new DropTarget(viewPanel, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
 //            @Override
 //            public void drop(DropTargetDropEvent e) {
@@ -84,19 +86,24 @@ public class HomeController extends A_Controller{
 //            }
 //        }, true, null);
         FileDrop.Listener listener = files -> {
-            System.out.println("Files being dropped");
+            Logger.triggerEvent(Logger.LOG, "Files being dropped");
 
             if(files.length < 1)
                 return;
 
             File file = files[0];
+            Logger.triggerEvent(Logger.VERBOSE, "Drag&Drop file : " + file.getPath());
             HomeController that = HomeController.this;
-            if(!that.fileIsJson(file))
+            if(!that.fileIsJson(file)) {
+                Logger.triggerEvent(Logger.WARNING, "File dropped was not JSON : " + file.getPath());
                 return;
+            }
 
             try {
+                Logger.triggerEvent(Logger.VERBOSE, "Using JSON file : " + file.getPath());
                 that.goExecution(file);
             } catch (IOException | UnsupportedLookAndFeelException e) {
+                Logger.triggerEvent(Logger.ERROR, "Error while opening the file or while changing the look and feel");
                 e.printStackTrace();
             }
         };
@@ -107,6 +114,7 @@ public class HomeController extends A_Controller{
 
     private void addListenersToFileChooserButton(ViewPanel viewPanel, ViewsManager manager) {
         this.assertParamsAreNotNull(viewPanel, manager);
+        Logger.triggerEvent(Logger.VERBOSE, "Adding listeners to HomeController's file chooser button");
         JButton button = viewPanel.<ViewPanel>getComponentAs(HomeView.RHS_PANEL)
         .<ViewPanel>getComponentAs(HomeView.BUTTON_PANEL)
         .<JButton>getComponentAs(HomeView.FILE_CHOOSER_BTN);
@@ -148,6 +156,7 @@ public class HomeController extends A_Controller{
 
     private void fileChooserLogic() throws UnsupportedLookAndFeelException {
 //        System.out.println("click click modafucka");
+        Logger.triggerEvent(Logger.VERBOSE, "File chooser logic");
         if(!this.fileChooserOpen) {
             this.fileChooserOpen = true;
             this.fileChooser = new JDialog();
@@ -189,6 +198,9 @@ public class HomeController extends A_Controller{
         if(!this.fileIsJson(selectedFile))
             return;
 
+
+        Logger.triggerEvent(Logger.VERBOSE, "Going for execution");
+
         String path = selectedFile.getAbsolutePath();
         this.getControllersManager().setModelsManager(ModelsManager.fromFile(path));
         this.attachLockListListeners();
@@ -207,13 +219,16 @@ public class HomeController extends A_Controller{
 //            TextApp.out("Index: " + index);
 //            //out("");
 //        }).on(DBTransactionExecution.STOP, (eventName, args) -> TextApp.displayEventName(eventName));
+        Logger.triggerEvent(Logger.VERBOSE, "Attaching ExecutionController's listeners");
 
         ExecutionController executionController = ((ExecutionController) this.getControllersManager().getController(App.EXECUTION_VIEW_TAG));
         ViewPanel view = executionController.view.getViewPanel();
         ViewsManager viewsManager = executionController.getViewsManager();
         executionController.addListenersToLockStackPanel(view, viewsManager);
         executionController.addListenersToPendingPanel(view, viewsManager);
+        executionController.addListenersToMenuBar(view, viewsManager);
         executionController.addListenersToTimelines();
+        executionController.addKeyboardShortcuts();
     }
 
     protected void attachLockListListeners(){

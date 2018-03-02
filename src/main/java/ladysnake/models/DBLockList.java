@@ -91,6 +91,7 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
 
     //protected List<DBLockList.Lock> pending;
     protected List<DBTransactionAction> pending;
+//    protected List<DBTransactionAction> executionBackup;
 
     protected DBTransactionExecution execution;
 
@@ -101,18 +102,33 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         super();
         this.execution = execution;
         this.pending = new ArrayList<>();
+//        this.executionBackup = new ArrayList<>();
         this.observers = new HashMap<>();
 
-        this.registerEvent(DBLockList.ADD_LOCK)
-        .registerEvent(DBLockList.RM_LOCK)
-        .registerEvent(DBLockList.ADD_PENDING)
-        .registerEvent(DBLockList.RM_PENDING);
+        this.registerEvent(ADD_LOCK)
+        .registerEvent(RM_LOCK)
+        .registerEvent(ADD_PENDING)
+        .registerEvent(RM_PENDING)
+        .registerEvent(RESET)
+        .registerEvent(REPAINT);
     }
 
     protected DBLockList registerEvent(String eventName){
         if(!this.eventIsRegistered(eventName))
             this.getObservers().put(eventName, new ArrayList<>());
 
+        return this;
+    }
+
+    public DBLockList reset(){
+        super.clear();
+        this.pending.clear();
+        this.trigger(RESET);
+        return this.repaint();
+    }
+
+    public DBLockList repaint(){
+        this.trigger(REPAINT);
         return this;
     }
 
@@ -160,7 +176,6 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
 
     public DBLockList.Lock getLockOn(DBGranule granule, String source){
       return this.stream()
-//      .peek(e -> System.out.println(e.getSource()))
       .filter(lock -> lock.getSource().equals(source))
       .filter(lock -> lock.getTarget().equals(granule))
       .findFirst()
@@ -231,12 +246,14 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
             this.remove(existingLock);
 
         super.add(lock);
+//        this.executionBackup.add(action);
         this.trigger(DBLockList.ADD_LOCK, lock, action.getActionType().getName());
         return true;
     }
 
     public boolean addPending(DBTransactionAction action){
         boolean ret = this.pending.add(action);
+//        this.executionBackup.add(action);
         this.trigger(DBLockList.ADD_PENDING, action);
         return ret;
     }
@@ -333,10 +350,13 @@ public class DBLockList extends ArrayList<DBLockList.Lock> implements I_MightNoN
         return ret;
     }
 
-    public final static String ADD_LOCK = "DBLockList@add";
-    public final static String RM_LOCK = "DBLockList@remove";
-    public final static String ADD_PENDING = "DBLockList@add.pending";
-    public final static String RM_PENDING = "DBLockList@remove.pending";
+    public final static String EVENTS_BASENAME = "DBLockList@";
+    public final static String ADD_LOCK = EVENTS_BASENAME + "add";
+    public final static String RM_LOCK = EVENTS_BASENAME + "remove";
+    public final static String ADD_PENDING = EVENTS_BASENAME + "add.pending";
+    public final static String RM_PENDING = EVENTS_BASENAME + "remove.pending";
+    public final static String RESET = EVENTS_BASENAME + "reset";
+    public final static String REPAINT = EVENTS_BASENAME + "repaint";
 
     public final static String ERROR__WHO_HAS_LOCK_ON = "ERROR#DBLockList@whoHasLockOn";
     public final static String ERROR__WHO_HAS_STRICTEST_LOCK_ON = "ERROR#DBLockList@whoHasStrictestLockOn";

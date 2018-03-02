@@ -4,6 +4,8 @@ import ladysnake.helpers.utils.I_MightNoNullParams;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
@@ -26,6 +28,15 @@ public class ViewPanel extends JPanel implements I_MightNoNullParams, I_TaggedCo
     public ViewPanel(LayoutManager layoutManager, boolean isDoubleBuffered){
         super(layoutManager, isDoubleBuffered);
         this.components = new HashSet<>();
+        super.setFocusable(true);
+//        super.setRequestFocusEnabled(true);
+//        super.grabFocus();
+//        super.addFocusListener(new FocusAdapter() {
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//                ViewPanel.super.requestFocusInWindow();
+//            }
+//        });
     }
 
     /**Constructs a double buffered {@link ViewPanel} given a layout

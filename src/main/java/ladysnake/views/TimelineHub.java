@@ -2,7 +2,9 @@ package ladysnake.views;
 
 import com.sun.istack.internal.Nullable;
 import ladysnake.helpers.events.I_Observer;
+import ladysnake.helpers.log.Logger;
 import ladysnake.helpers.utils.I_MightNoNullParams;
+import ladysnake.models.DBTransaction;
 import ladysnake.models.DBTransactionAction;
 import ladysnake.models.DBTransactionExecution;
 
@@ -35,12 +37,33 @@ public class TimelineHub extends ViewPanel implements I_Observer, I_MightNoNullP
         .orElse(null);
     }
 
+    public TimelineHub reset(){
+        this.stream().forEach(Timeline::reset);
+        this.resetProcessedIndexes();
+        super.repaint();
+        super.revalidate();
+        return this;
+    }
+
     @Override
     public void handleEvent(String eventName, Object... args) {
-//        System.out.println("Handling event: " + eventName);
-
         if(!EVENTS_HANDLED.contains(eventName))
             return;
+
+        if (eventName.equals(DBTransactionExecution.RESET)){
+            this.reset();
+            super.repaint();
+            super.revalidate();
+            return;
+        }
+
+        if(eventName.equals(DBTransactionExecution.REPAINT)){
+            super.repaint();
+            super.revalidate();
+            this.stream().forEach(Timeline::repaint);
+            this.stream().forEach(Timeline::revalidate);
+            return;
+        }
 
         DBTransactionAction action = ((DBTransactionAction) args[0]);
         Integer index = action.getIndex();
@@ -51,6 +74,7 @@ public class TimelineHub extends ViewPanel implements I_Observer, I_MightNoNullP
         String type = action.getLock().getName();
         String target = action.getTarget().getName();
         Timeline correspondingTimeline = this.getTimelineFor(source);
+//        Logger.triggerEvent(Logger.VERBOSE, "Corresponding Timeline : " + correspondingTimeline);
         if(correspondingTimeline == null)
             return;
 
@@ -93,5 +117,9 @@ public class TimelineHub extends ViewPanel implements I_Observer, I_MightNoNullP
 
     public final static String TIMELINE_BASETAG = "TimelineHub@timeline#";
 
-    public final static List<String> EVENTS_HANDLED = Arrays.asList(DBTransactionExecution.STEP_BEING_PROCESSED);
+    public final static List<String> EVENTS_HANDLED = Arrays.asList(
+        DBTransactionExecution.STEP_BEING_PROCESSED,
+        DBTransactionExecution.RESET,
+        DBTransactionExecution.REPAINT
+    );
 }

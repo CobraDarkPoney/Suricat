@@ -2,8 +2,10 @@ package ladysnake.views;
 
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxGraphLayout;
+import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.view.mxGraph;
 import ladysnake.helpers.events.I_Observer;
+import ladysnake.helpers.log.Logger;
 import ladysnake.models.DBGranule;
 import ladysnake.models.DBLockList;
 import ladysnake.models.DBTransactionAction;
@@ -53,7 +55,9 @@ public class PendingGraph extends mxGraph implements I_Observer{
         this.lockList = lockList;
         this.lockList
         .on(DBLockList.ADD_PENDING, this)
-        .on(DBLockList.RM_PENDING, this);
+        .on(DBLockList.RM_PENDING, this)
+        .on(DBLockList.RESET, this)
+        .on(DBLockList.REPAINT, this);
         return this;
     }
 
@@ -61,8 +65,75 @@ public class PendingGraph extends mxGraph implements I_Observer{
         return this.getDefaultParent();
     }
 
+    public void empty(){
+        mxIGraphModel model = super.getModel();
+        model.beginUpdate();
+        try{
+            this.vertices.values()
+            .forEach(model::remove);
+
+            this.edges.values()
+            .forEach(model::remove);
+
+            this.vertices.clear();
+            this.edges.clear();
+        }finally{
+            model.endUpdate();
+        }
+    }
+
+    public PendingGraph reset(){
+//        Object[] cells = this.vertices.values().toArray();
+//        Logger.triggerEvent(Logger.VERBOSE, "Resetting pending graph");
+//        super.getModel().beginUpdate();
+//        try{
+//            super.removeCells(cells, true);
+////            super.removeCells(super.getChildVertices(this.getParent()), true);
+//        }finally{
+//            super.getModel().endUpdate();
+//        }
+//        this.vertices.clear();
+//        this.edges.clear();
+
+        this.empty();
+
+        return this;
+    }
+
+    public void handleRepaint(){
+        super.refresh();
+        super.repaint();
+    }
+
     @Override
     public void handleEvent(String eventName, Object... args) {
+        if(eventName.equals(DBLockList.RESET)){
+            Logger.triggerEvent(Logger.VERBOSE, "Reset graph");
+            this.reset();
+            mxGraphLayout layout = new mxCircleLayout(this);
+            layout.execute(getParent());
+            super.getModel().beginUpdate();
+            try{
+                super.refresh();
+                super.repaint();
+                super.foldCells(true, true);
+                super.repaint();
+            }finally{
+                super.getModel().endUpdate();
+            }
+            return;
+        }
+
+        if(eventName.equals(DBLockList.REPAINT)){
+            Logger.triggerEvent(Logger.VERBOSE, "Repaint lock to graph");
+            mxGraphLayout layout = new mxCircleLayout(this);
+            layout.execute(getParent());
+            super.refresh();
+            super.repaint();
+            super.foldCells(true, true);
+            return;
+        }
+
         if(!Arrays.asList(DBLockList.ADD_PENDING, DBLockList.RM_PENDING).contains(eventName))
             return;
 
@@ -73,7 +144,7 @@ public class PendingGraph extends mxGraph implements I_Observer{
         String source = transactionAction.getSource();
 //        String blocking = this.getLockList().getLockOn(targetGranule, source).getSource();
         String blocking = this.getLockList().whoHasStrictestLockOn(targetGranule);
-        String edge = PendingGraph.makeEdgeLabel(target, type);
+        String edge = PendingGraph.makeEdgeLabel(source, target, type, blocking);
         Object parent = getParent();
         Object sourceVertex, blockingVertex, insertedEdge;
 
@@ -81,6 +152,7 @@ public class PendingGraph extends mxGraph implements I_Observer{
         try{
             switch (eventName){
                 case DBLockList.ADD_PENDING:
+                    Logger.triggerEvent(Logger.VERBOSE, "Adding pending lock to graph");
                     if(!this.vertices.containsKey(source)) {
 //                        sourceVertex = super.insertVertex(parent, null, source, POS, POS, DIM, DIM);
                         sourceVertex = super.insertVertex(parent, source, source, POS, POS, DIM, DIM);
@@ -102,6 +174,7 @@ public class PendingGraph extends mxGraph implements I_Observer{
                     break;
 
                 case DBLockList.RM_PENDING:
+                    Logger.triggerEvent(Logger.VERBOSE, "Removing pending lock from graph");
                     List<Object> toRemove = new ArrayList<>();
                     Object vSource = this.vertices.getOrDefault(source, null);
                     Object vBlocking;
@@ -114,7 +187,15 @@ public class PendingGraph extends mxGraph implements I_Observer{
                         toRemove.add(vBlocking);
 
 
-                    super.removeCells(toRemove.toArray(), true);
+//                    super.getModel().beginUpdate();
+//                    try{
+                        super.removeCells(toRemove.toArray(), true);
+//                    }finally{
+//                        super.getModel().endUpdate();
+//                    }
+                    break;
+
+                default:
                     break;
             }
         }finally{
@@ -151,8 +232,8 @@ public class PendingGraph extends mxGraph implements I_Observer{
 //        }
     }
 
-    public static String makeEdgeLabel(String target, String type){
-        return type + "@" + target;
+    public static String makeEdgeLabel(String source, String target, String type, String blocking){
+        return source + "#" + type + "@" + target + "#" + blocking;
     }
 
     public final static int POS = 100;

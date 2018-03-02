@@ -1,6 +1,7 @@
 package ladysnake.views;
 
 import com.sun.istack.internal.Nullable;
+import ladysnake.helpers.log.Logger;
 import ladysnake.helpers.utils.I_MightNoNullParams;
 
 import javax.swing.*;
@@ -74,6 +75,7 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
     public ViewsManager addView(String tag, A_View view) throws UnsupportedLookAndFeelException {
         this.assertParamsAreNotNull(tag, view);
         this.views.put(tag, view);
+        Logger.triggerEvent(Logger.VERBOSE, "Adding a view to the views manager : " + tag);
 
         if(!this.hasCurrentView())
             this.setCurrentView(tag);
@@ -108,6 +110,8 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
         if(!this.hasView(tag))
             return this;
 
+        Logger.triggerEvent(Logger.VERBOSE, "Removing view : " + tag);
+
         this.views.remove(tag);
         return this;
     }
@@ -128,6 +132,7 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
         }
 
         viewToDestroy.finalize();
+        Logger.triggerEvent(Logger.VERBOSE, "Destroying view : " +  tag);
         return this;
     }
 
@@ -177,11 +182,15 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
         if(!this.views.containsKey(tag))
             throw new IllegalArgumentException("No such view available (requested: "+ tag + ")");
 
+        Logger.triggerEvent(Logger.VERBOSE, "Setting current view : " + tag);
+
         A_View view = this.getView(tag);//The VM contains the view -> not null
         if( !this.isCurrentView(tag, view) ){
             this.removeComponent(VIEW_TAG)
             .addComponent(VIEW_TAG, view.getViewPanel())
             .replaceTitle(view.getViewTitle());
+
+//            this.getComponent(VIEW_TAG).requestFocus();
 
             //if(!Objects.isNull(view.getViewMenuBar()))
             this.setMenubar(view.getViewMenuBar());
@@ -222,6 +231,8 @@ public class ViewsManager extends ViewWindow implements I_MightNoNullParams{
         this.assertParamsAreNotNull(toTag);
         if(!this.hasView(toTag))
             throw new IllegalArgumentException("There is no such view available (requested: " + toTag + ")");
+
+        Logger.triggerEvent(Logger.VERBOSE, "Switching view  from `" + currentViewTag + "` to `" + toTag + "`");
 
         return this.hideCurrentView()
         .setCurrentView(toTag)

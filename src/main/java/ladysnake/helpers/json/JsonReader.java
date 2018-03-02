@@ -1,6 +1,7 @@
 package ladysnake.helpers.json;
 
 import com.google.gson.*;
+import ladysnake.helpers.log.Logger;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -67,6 +68,7 @@ public class JsonReader {
      * @throws IOException if the file cannot be found
      */
     protected JsonElement cacheFile() throws JsonParseException,  IOException {
+        Logger.triggerEvent(Logger.VERBOSE, "Caching file : " + this.fileURI);
         final Path path = Paths.get(this.fileURI);
         final BufferedReader reader = Files.newBufferedReader(path, charset);
 
@@ -93,6 +95,7 @@ public class JsonReader {
      *  @throws  IOException if the file cannot be found
      */
     public JsonReader switchFile(String URI, boolean cacheContent) throws JsonParseException, IOException{
+        Logger.triggerEvent(Logger.VERBOSE, "Switching URI for : " + URI + " | Will cache content ? " + (cacheContent ? "Yes" : "No"));
         this.fileURI = URI;
         return cacheContent ? refreshContent() : this;
     }

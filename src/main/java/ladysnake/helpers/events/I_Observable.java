@@ -12,6 +12,7 @@ public interface I_Observable extends I_MightNoNullParams{
 
     default I_Observable trigger(String eventName, Object... args){
         this.assertParamsAreNotNull(eventName, args);
+//        Logger.triggerEvent(Logger.VERBOSE, "Triggering the " + (this.eventIsRegistered(eventName) ? "registered" : "unregistered") + " event `" + eventName + "`");
         if(this.eventIsRegistered(eventName))
             this.getObservers().get(eventName)
             .forEach(observer -> observer.handleEvent(eventName, args));
@@ -21,6 +22,7 @@ public interface I_Observable extends I_MightNoNullParams{
 
     default I_Observable on(String eventName, I_Observer observer){
         this.assertParamsAreNotNull(eventName, observer);
+//        Logger.triggerEvent(Logger.VERBOSE, "Adding a listener to the " + (this.eventIsRegistered(eventName) ? "registered" : "unregistered") + " event `" + eventName + "`");
         if(this.eventIsRegistered(eventName))
             this.getObservers().get(eventName).add(observer);
 
@@ -29,6 +31,7 @@ public interface I_Observable extends I_MightNoNullParams{
 
     default I_Observable off(String eventName, I_Observer observer){
         this.assertParamsAreNotNull(eventName, observer);
+//        Logger.triggerEvent(Logger.VERBOSE, "Removing a listener for the " + (this.eventIsRegistered(eventName) ? "registered" : "unregistered") + " event `" + eventName + "`");
         if(this.eventIsRegistered(eventName))
             this.getObservers().get(eventName).remove(observer);
 
@@ -37,6 +40,7 @@ public interface I_Observable extends I_MightNoNullParams{
 
     default I_Observable off(String eventName){
         this.assertParamsAreNotNull(eventName);
+//        Logger.triggerEvent(Logger.VERBOSE, "Removing all listeners for " + (this.eventIsRegistered(eventName) ? "registered" : "unregistered") + " event `" + eventName + "`");
         if(this.eventIsRegistered(eventName))
             this.getObservers().replace(eventName, new ArrayList<>());
 

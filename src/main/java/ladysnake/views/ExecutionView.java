@@ -2,7 +2,6 @@ package ladysnake.views;
 
 
 import com.mxgraph.swing.mxGraphComponent;
-import ladysnake.helpers.utils.Range;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,10 +119,16 @@ public class ExecutionView extends A_View{
 //        this.graphComponent = new mxGraphComponent(graph);
 ////        JScrollPane scrollPane = new JScrollPane(this.graphComponent, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 //        p.addComponent(PENDING_GRAPH, this.graphComponent);
-        this.pendingGraph = new PendingGraph();
+        if(this.pendingGraph == null)
+            this.pendingGraph = new PendingGraph();
         mxGraphComponent graphComponent = new mxGraphComponent(this.pendingGraph);
         p.addComponent(PENDING_GRAPH, graphComponent);
         return p;
+    }
+
+    public ExecutionView setPendingGraph(PendingGraph pendingGraph){
+        this.pendingGraph = pendingGraph;
+        return this;
     }
 
     public PendingGraph getPendingGraph() {
@@ -135,11 +140,16 @@ public class ExecutionView extends A_View{
     }
 
     @Override
-    public JMenuBar getViewMenuBar() { return null; }
+    public JMenuBar getViewMenuBar() {
+        return ExecutionMenuBar.getMenuBar();
+//        return null;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class properties
     ////////////////////////////////////////////////////////////////////////////////////////////
+    public final static String BASENAME = "ExecutionView@";
+
     public final static int GRID_ROWS = 1;
     public final static int GRID_COLS = 2;
     public final static int GRID_SPACING = 10;
@@ -147,14 +157,14 @@ public class ExecutionView extends A_View{
     public final static int RHS_ROWS = 2;
     public final static int RHS_COLS = 1;
 
-    public final static String TRANSACTION_PANEL = "Transaction";
-    public final static String RHS_PANEL = "rhs-panel";
-    public final static String LOCK_STACK_PANEL = "Locks";
-    public final static String PENDING_GRAPH_PANEL = "Pendings";
-    public final static String LOCK_STACK = "lock-stack";
-    public final static String LOCK_STACK_INNER = "stack-inner";
+    public final static String TRANSACTION_PANEL = BASENAME + "Transaction";
+    public final static String RHS_PANEL = BASENAME + "rhs-panel";
+    public final static String LOCK_STACK_PANEL = BASENAME + "Locks";
+    public final static String PENDING_GRAPH_PANEL = BASENAME + "Pendings";
+    public final static String LOCK_STACK = BASENAME + "lock-stack";
+    public final static String LOCK_STACK_INNER = BASENAME + "stack-inner";
 
-    public final static String PENDING_GRAPH = "ExecutionController@pendingGraph";
-    public final static String TIMELINE_HUB = "ExecutionController@timelineHub";
-    public final static String SCROLLPANE = "scroll";
+    public final static String PENDING_GRAPH = BASENAME + "pendingGraph";
+    public final static String TIMELINE_HUB = BASENAME + "timelineHub";
+    public final static String SCROLLPANE = BASENAME + "scroll";
 }

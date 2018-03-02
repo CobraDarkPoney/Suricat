@@ -1,5 +1,6 @@
 package ladysnake.controllers;
 
+import ladysnake.helpers.log.Logger;
 import ladysnake.models.ModelsManager;
 import ladysnake.views.ViewsManager;
 
@@ -19,6 +20,8 @@ public class ControllersManager {
     }
 
     public  ControllersManager addController(String name, A_Controller controller){
+        Logger.triggerEvent(Logger.VERBOSE, "Adding/replacing a controller : " + name);
+
         if(this.hasController(name))
             this.controllers.replace(name, controller);
         else

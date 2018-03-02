@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import ladysnake.helpers.json.I_JsonSerializable;
 import ladysnake.helpers.json.JsonReader;
+import ladysnake.helpers.log.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class ModelsManager implements I_JsonSerializable{
 
     @Override
     public JsonElement toJson() {
+        Logger.triggerEvent(Logger.VERBOSE, "Converting ModelsManager to JSON");
         JsonArray transactions = (JsonArray) this.transaction.toJson();
         JsonArray models = new JsonArray();
         this.tables.stream()
@@ -66,6 +68,7 @@ public class ModelsManager implements I_JsonSerializable{
     }
 
     public static ModelsManager fromFile(String path) throws IOException {
+        Logger.triggerEvent(Logger.VERBOSE, "Reading ModelsManager from `" + path + "`");
         JsonReader jsonReader = new JsonReader(path);
         return new ModelsManager(jsonReader.getAsObject());
     }
