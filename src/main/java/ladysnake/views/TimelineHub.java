@@ -1,10 +1,9 @@
 package ladysnake.views;
 
-import com.sun.istack.internal.Nullable;
+
+import org.jetbrains.annotations.Nullable;
 import ladysnake.helpers.events.I_Observer;
-import ladysnake.helpers.log.Logger;
 import ladysnake.helpers.utils.I_MightNoNullParams;
-import ladysnake.models.DBTransaction;
 import ladysnake.models.DBTransactionAction;
 import ladysnake.models.DBTransactionExecution;
 

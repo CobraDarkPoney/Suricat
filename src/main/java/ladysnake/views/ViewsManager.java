@@ -1,6 +1,6 @@
 package ladysnake.views;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import ladysnake.helpers.log.Logger;
 import ladysnake.helpers.utils.I_MightNoNullParams;
 

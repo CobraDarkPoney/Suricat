@@ -37,7 +37,7 @@ public class Timeline extends ViewPanel implements I_MightNoNullParams {
     protected JButton makeSourceDisplay(String source) throws IOException, FontFormatException {
         this.assertParamsAreNotNull(source);
         JButton label = new JButton(source);
-        Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_MEDIUM_PATH)).deriveFont(SOURCE_SIZE);
+        Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream(App.ROBOTO_MEDIUM_PATH)).deriveFont(SOURCE_SIZE);
         label.setFont(robotoMedium);
         return label;
     }

@@ -1,21 +1,13 @@
 package ladysnake.views;
 
-import javafx.embed.swing.JFXPanel;
 import ladysnake.App;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetAdapter;
-import java.awt.dnd.DropTargetDropEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class HomeView extends A_View{
@@ -55,7 +47,7 @@ public class HomeView extends A_View{
     }
 
     protected ViewPanel getLogoPanel() throws IOException {
-        BufferedImage logo = ImageIO.read(new File(LOGO_URL));
+        BufferedImage logo = ImageIO.read(this.getClass().getResource(LOGO_URL));
         ViewPanel logoPanel = new ViewPanel(){
             protected Image bg = logo;
 
@@ -111,8 +103,8 @@ public class HomeView extends A_View{
 //        textHolder.addComponent(TEXT_PANEL, textPanel, constraints);
 //        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 
-        Font roboto = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_PATH)).deriveFont(MESSAGE_PT);
-        Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_MEDIUM_PATH)).deriveFont(TITLE_PT);
+        Font roboto = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream(App.ROBOTO_PATH)).deriveFont(MESSAGE_PT);
+        Font robotoMedium = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream(App.ROBOTO_MEDIUM_PATH)).deriveFont(TITLE_PT);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         ge.registerFont(roboto);
         ge.registerFont(robotoMedium);
@@ -190,7 +182,7 @@ public class HomeView extends A_View{
     public final static int LOGO_COLS = 1;
     public final static int LOGO_SPACING = GRID_SPACING;
 
-    public final static String LOGO_URL = "logo-smooth.png";
+    public final static String LOGO_URL = "/logo-smooth.png";
 
     public final static String TEXT_HOLDER = "tholder";
     public final static String BUTTON_PANEL_HOLDER = "bpholder";

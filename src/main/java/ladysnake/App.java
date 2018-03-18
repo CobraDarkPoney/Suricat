@@ -86,8 +86,8 @@ public class App {
     public final static String EXECUTION_VIEW_TAG = "execution";
     public final static String HOME_VIEW_TAG = "home";
 
-    public final static String ROBOTO_PATH = "rsc/fonts/Roboto-Light.ttf";
-    public final static String ROBOTO_MEDIUM_PATH = "rsc/fonts/Roboto-Medium.ttf";
+    public final static String ROBOTO_PATH = "/fonts/Roboto-Light.ttf";
+    public final static String ROBOTO_MEDIUM_PATH = "/fonts/Roboto-Medium.ttf";
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////Class methods
@@ -100,6 +100,26 @@ public class App {
 
     public static void main(String[] args) throws IOException, UnsupportedLookAndFeelException, FontFormatException {
         App app = App.make();
+        List<String> options = Arrays.stream(args)
+        .filter(arg -> arg.startsWith("-"))
+        .collect(Collectors.toList());
+
+        if(options.contains("-h") || options.contains("--help") || options.contains("-?")){
+            StringBuilder sb = new StringBuilder();
+            sb.append("suricat [-h] [-v] [-w] [-e] [input file path]\n");
+            sb.append("\n");
+            sb.append("-h (or --help, or -?) : Displays this helper message\n");
+            sb.append("-v : enables verbose mode (logging to stdout)\n");
+            sb.append("-w : displays warning messages (logging to stdout)\n");
+            sb.append("-e : displays error messages (logging to stdout)\n");
+            System.out.println(sb.toString());
+            System.exit(0);
+            return;
+        }
+
+        List<String> arguments = Arrays.stream(args)
+        .filter(arg -> !options.contains(arg))
+        .collect(Collectors.toList());
 
         I_Observer simpleLogObserver = (eventName, optArgs) -> {
             String argString =  Arrays.stream(optArgs)
@@ -107,13 +127,18 @@ public class App {
             .collect(Collectors.joining(", "));
             System.out.println(eventName + ": " + argString);
         };
-//        Logger.addListener(Logger.LOG, simpleLogObserver);
-        Logger.addListener(Logger.ERROR, simpleLogObserver);
-        Logger.addListener(Logger.WARNING, simpleLogObserver);
-        Logger.addListener(Logger.VERBOSE, simpleLogObserver);
 
-        if(args.length > 0){
-            String filePath = args[0];
+        if(options.contains("-e"))
+            Logger.addListener(Logger.ERROR, simpleLogObserver);
+
+        if(options.contains("-w"))
+            Logger.addListener(Logger.WARNING, simpleLogObserver);
+
+        if(options.contains("-v"))
+            Logger.addListener(Logger.VERBOSE, simpleLogObserver);
+
+        if(arguments.size() > 0){
+            String filePath = arguments.get(0);
             File file = new File(filePath);
             HomeController homeController = ((HomeController) app.getControllersManager().getController(App.HOME_VIEW_TAG));
 
@@ -124,6 +149,7 @@ public class App {
 
             homeController.goExecution(file);
         }
+
         app.run();
     }
 }

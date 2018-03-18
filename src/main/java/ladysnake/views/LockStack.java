@@ -7,10 +7,14 @@ import ladysnake.models.DBLockList;
 import ladysnake.models.DBTransactionAction;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -197,13 +201,13 @@ public class LockStack extends JTable implements I_Observer{
         this.model = getInitialTableModel();
 //        this.model.addRow(COLUMN_NAMES);
         super.setModel(this.model);
-        this.setIntercellSpacing(new Dimension(SPACING, SPACING));
-        this.setRowSorter(null);//Disable sorting for rows
-        this.setShowHorizontalLines(true);
-        this.setShowHorizontalLines(true);
+        super.setIntercellSpacing(new Dimension(SPACING, SPACING));
+        super.setRowSorter(null);//Disable sorting for rows
+        super.setShowHorizontalLines(true);
+        super.setShowHorizontalLines(true);
 
-        this.getTableHeader().setFont(HEADER_FONT);
-        this.setFont(CELLS_FONT);
+        super.getTableHeader().setFont(HEADER_FONT);
+        super.setFont(CELLS_FONT);
     }
 
     public LockStack addRowData(LockStack.Lock lock){
@@ -248,6 +252,6 @@ public class LockStack extends JTable implements I_Observer{
     public final float CELLS_FONTSIZE = 14f;
 
 //    public final Font  HEADER_FONT = new Font("Arial", Font.BOLD, 20);
-    public final Font  HEADER_FONT = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_MEDIUM_PATH)).deriveFont(HEADER_FONTSIZE);
-    public final Font CELLS_FONT = Font.createFont(Font.TRUETYPE_FONT, new File(App.ROBOTO_PATH)).deriveFont(CELLS_FONTSIZE);
+    public final Font  HEADER_FONT = Font.createFont(Font.TRUETYPE_FONT, LockStack.class.getResourceAsStream(App.ROBOTO_MEDIUM_PATH)).deriveFont(HEADER_FONTSIZE);
+    public final Font CELLS_FONT = Font.createFont(Font.TRUETYPE_FONT, LockStack.class.getResourceAsStream(App.ROBOTO_PATH)).deriveFont(CELLS_FONTSIZE);
 }

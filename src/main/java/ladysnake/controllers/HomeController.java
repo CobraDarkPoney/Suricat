@@ -274,8 +274,8 @@ public class HomeController extends A_Controller{
 
     public final static Dimension FILE_CHOOSER_DIM = new Dimension(600, 400);
     public final static int BORDER_SIZE = 6;
-    public final static Color BORDER_COLOR = new Color(0x3b5998);
-//    public final static Border BORDER = BorderFactory.createMatteBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_COLOR);
+    public final static Color BORDER_COLOR = new Color(0x6f3b5998, true); //#3b5998 -- 0xAARRGGBB
+    public final static Border BORDER = BorderFactory.createMatteBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_COLOR);
     public final static Border DASHED_BORDER = BorderFactory.createDashedBorder(BORDER_COLOR, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE,  true);
-    public final static Border BORDER = BorderFactory.createTitledBorder(DASHED_BORDER, "Drag & Drop", TitledBorder.CENTER, TitledBorder.ABOVE_TOP);
+//    public final static Border BORDER = BorderFactory.createTitledBorder(DASHED_BORDER, "Drag & Drop", TitledBorder.CENTER, TitledBorder.ABOVE_TOP);
 }

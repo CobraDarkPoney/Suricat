@@ -1,8 +1,7 @@
 package ladysnake.views;
 
 import javax.swing.*;
-
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import ladysnake.helpers.utils.I_MightNoNullParams;
 
 import java.util.Arrays;
